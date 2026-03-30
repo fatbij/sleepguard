@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sleep Window"
+        android:textSize="18sp"
+        android:textColor="#CCFFFFFF"
+        android:letterSpacing="0.2"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Large cycling countdown -->
+    <TextView
+        android:id="@+id/tvCountdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="30:00"
+        android:textSize="88sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:fontFamily="monospace" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cycle timer"
+        android:textSize="13sp"
+        android:textColor="#88FFFFFF"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="48dp" />
+
+    <TextView
+        android:id="@+id/tvInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Breathe slowly · tap for sleep story"
+        android:textSize="15sp"
+        android:textColor="#CCFFFFFF"
+        android:gravity="center" />
+
+</LinearLayout>
