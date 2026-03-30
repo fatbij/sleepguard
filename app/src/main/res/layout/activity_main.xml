@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D1B3E"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌙"
+            android:textSize="64sp"
+            android:layout_marginTop="32dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SleepGuard"
+            android:textSize="32sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set your sleep window"
+            android:textSize="14sp"
+            android:textColor="#88AABB"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="40dp" />
+
+        <!-- Sleep time -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BEDTIME"
+            android:textSize="11sp"
+            android:textColor="#6688AA"
+            android:letterSpacing="0.15" />
+
+        <TextView
+            android:id="@+id/tvSleepTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22:30"
+            android:textSize="56sp"
+            android:textColor="#7EB8FF"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <Button
+            android:id="@+id/btnSetSleep"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:text="Change Bedtime"
+            android:backgroundTint="#1E3A6E"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Wake time -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WAKE TIME"
+            android:textSize="11sp"
+            android:textColor="#6688AA"
+            android:letterSpacing="0.15" />
+
+        <TextView
+            android:id="@+id/tvWakeTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="07:00"
+            android:textSize="56sp"
+            android:textColor="#FFA05A"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <Button
+            android:id="@+id/btnSetWake"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:text="Change Wake Time"
+            android:backgroundTint="#1E3A6E"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="48dp" />
+
+        <!-- Activate -->
+        <Button
+            android:id="@+id/btnActivate"
+            android:layout_width="240dp"
+            android:layout_height="56dp"
+            android:text="Activate SleepGuard"
+            android:backgroundTint="#2E6FD9"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnStop"
+            android:layout_width="240dp"
+            android:layout_height="48dp"
+            android:text="Stop"
+            android:backgroundTint="#333333"
+            android:textColor="#AAAAAA"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="40dp" />
+
+    </LinearLayout>
+</ScrollView>
