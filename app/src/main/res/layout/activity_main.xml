@@ -1,119 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D1B3E"
-    android:padding="24dp">
+    android:background="@drawable/bg_sleep"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:padding="32dp">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <!-- Moon icon -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="🌙"
             android:textSize="64sp"
-            android:layout_marginTop="32dp" />
+            android:layout_marginBottom="8dp" />
 
+        <!-- App name -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SleepGuard"
-            android:textSize="32sp"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp" />
+            android:textSize="28sp"
+            android:textColor="#DDEEFF"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="4dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Set your sleep window"
-            android:textSize="14sp"
-            android:textColor="#88AABB"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="40dp" />
+            android:textSize="13sp"
+            android:textColor="#55AACCEE"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="48dp" />
 
-        <!-- Sleep time -->
+        <!-- Bedtime label -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="BEDTIME"
             android:textSize="11sp"
-            android:textColor="#6688AA"
-            android:letterSpacing="0.15" />
+            android:textColor="#66AACCEE"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="10dp" />
 
+        <!-- Bedtime display box -->
         <TextView
             android:id="@+id/tvSleepTime"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="22:30"
-            android:textSize="56sp"
-            android:textColor="#7EB8FF"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp" />
-
-        <Button
-            android:id="@+id/btnSetSleep"
-            android:layout_width="200dp"
-            android:layout_height="48dp"
-            android:text="Change Bedtime"
-            android:backgroundTint="#1E3A6E"
+            android:textSize="52sp"
             android:textColor="#FFFFFF"
-            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:background="@drawable/bg_time_box"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_marginBottom="32dp" />
 
-        <!-- Wake time -->
+        <!-- Wake time label -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="WAKE TIME"
             android:textSize="11sp"
-            android:textColor="#6688AA"
-            android:letterSpacing="0.15" />
+            android:textColor="#66AACCEE"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="10dp" />
 
+        <!-- Wake time display box -->
         <TextView
             android:id="@+id/tvWakeTime"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="07:00"
-            android:textSize="56sp"
-            android:textColor="#FFA05A"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp" />
-
-        <Button
-            android:id="@+id/btnSetWake"
-            android:layout_width="200dp"
-            android:layout_height="48dp"
-            android:text="Change Wake Time"
-            android:backgroundTint="#1E3A6E"
+            android:textSize="52sp"
             android:textColor="#FFFFFF"
-            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:background="@drawable/bg_time_box"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_marginBottom="48dp" />
 
-        <!-- Activate -->
-        <Button
+        <!-- Activate button -->
+        <TextView
             android:id="@+id/btnActivate"
-            android:layout_width="240dp"
-            android:layout_height="56dp"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
             android:text="Activate SleepGuard"
-            android:backgroundTint="#2E6FD9"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textColor="#FFFFFF"
+            android:background="@drawable/pill_soft"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="16dp" />
 
-        <Button
+        <!-- Stop button -->
+        <TextView
             android:id="@+id/btnStop"
-            android:layout_width="240dp"
-            android:layout_height="48dp"
-            android:text="Stop"
-            android:backgroundTint="#333333"
-            android:textColor="#AAAAAA"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="40dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop SleepGuard"
+            android:textSize="13sp"
+            android:textColor="#44FFFFFF"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="32dp" />
 
     </LinearLayout>
 </ScrollView>
