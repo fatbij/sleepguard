@@ -14,11 +14,10 @@ import java.util.Locale;
 
 public class WakeEpisodeActivity extends AppCompatActivity {
 
-    // Phases
-    private static final int PHASE_BREATHING   = 0;
-    private static final int PHASE_RESTING     = 1;
-    private static final int PHASE_LEAVE_BED   = 2;
-    private static final int PHASE_ESCALATION  = 3;
+    private static final int PHASE_BREATHING  = 0;
+    private static final int PHASE_RESTING    = 1;
+    private static final int PHASE_LEAVE_BED  = 2;
+    private static final int PHASE_ESCALATION = 3;
 
     private TextView tvPhaseTitle, tvPhaseSubtitle, tvElapsed,
                      tvSleepyAgain, tvLeaveBed, tvWakeIcon;
@@ -26,10 +25,9 @@ public class WakeEpisodeActivity extends AppCompatActivity {
 
     private Handler handler = new Handler(Looper.getMainLooper());
     private long startTimeMs;
-    private int currentPhase = PHASE_BREATHING;
+    private int currentPhase = -1;
     private SharedPreferences prefs;
 
-    // Thresholds in seconds
     private long breathingEnd;
     private long restingEnd;
     private long leaveBedStart;
@@ -50,7 +48,7 @@ public class WakeEpisodeActivity extends AppCompatActivity {
 
         getWindow().addFlags(
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON  |
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
         );
         getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
@@ -77,7 +75,10 @@ public class WakeEpisodeActivity extends AppCompatActivity {
         dot3            = findViewById(R.id.dot3);
         dot4            = findViewById(R.id.dot4);
 
-        // I'm sleepy again — end episode, go back to sleep screen
+        // Set corrected button label
+        tvLeaveBed.setText("A change of scene may help");
+
+        // I'm sleepy again — end episode
         tvSleepyAgain.setOnClickListener(v -> {
             handler.removeCallbacks(ticker);
             finish();
@@ -99,28 +100,27 @@ public class WakeEpisodeActivity extends AppCompatActivity {
     }
 
     private void loadThresholds() {
-        int breathingMins  = prefs.getInt("breathingMins",   5);
-        int restingMins    = prefs.getInt("restingMins",     10);
-        int leaveBedMins   = prefs.getInt("leaveBedMins",   15);
-        int escalationMins = prefs.getInt("escalationMins", 20);
+        int breathingMins  = prefs.getInt("breathingMins",  5);
+        int restingMins    = prefs.getInt("restingMins",   10);
+        int leaveBedMins   = prefs.getInt("leaveBedMins",  15);
+        int escalationMins = prefs.getInt("escalationMins",20);
 
-        breathingEnd   = breathingMins  * 60L;
-        restingEnd     = (breathingMins + restingMins) * 60L;
-        leaveBedStart  = leaveBedMins   * 60L;
+        breathingEnd    = breathingMins * 60L;
+        restingEnd      = (breathingMins + restingMins) * 60L;  // FIX: drives phase 2 boundary
+        leaveBedStart   = leaveBedMins * 60L;
         escalationStart = escalationMins * 60L;
     }
 
     private void updateDisplay(long elapsedSeconds) {
-        // Update elapsed time display
         long mins = elapsedSeconds / 60;
         long secs = elapsedSeconds % 60;
         tvElapsed.setText(String.format(Locale.UK, "%d:%02d", mins, secs));
 
-        // Determine phase
+        // FIX: use restingEnd for phase 2 boundary, not leaveBedStart
         int phase;
         if (elapsedSeconds < breathingEnd) {
             phase = PHASE_BREATHING;
-        } else if (elapsedSeconds < leaveBedStart) {
+        } else if (elapsedSeconds < restingEnd) {
             phase = PHASE_RESTING;
         } else if (elapsedSeconds < escalationStart) {
             phase = PHASE_LEAVE_BED;
@@ -128,18 +128,20 @@ public class WakeEpisodeActivity extends AppCompatActivity {
             phase = PHASE_ESCALATION;
         }
 
-        // Only update UI if phase changed
         if (phase != currentPhase) {
             currentPhase = phase;
             onPhaseChanged(phase);
         }
 
-        // Update dots
         updateDots(phase);
 
-        // Show leave bed button once threshold reached
         if (elapsedSeconds >= leaveBedStart) {
             tvLeaveBed.setVisibility(View.VISIBLE);
+        }
+
+        // FIX: remove KEEP_SCREEN_ON at escalation so screen can dim naturally
+        if (phase == PHASE_ESCALATION) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
 
@@ -150,22 +152,19 @@ public class WakeEpisodeActivity extends AppCompatActivity {
                 tvPhaseSubtitle.setText("No need to check the clock");
                 tvWakeIcon.setText("🌙");
                 break;
-
             case PHASE_RESTING:
                 tvPhaseTitle.setText("Rest quietly");
                 tvPhaseSubtitle.setText("Let sleep return naturally");
                 tvWakeIcon.setText("🌙");
                 break;
-
             case PHASE_LEAVE_BED:
-                tvPhaseTitle.setText("Time to leave the bed");
-                tvPhaseSubtitle.setText("Go somewhere calm until sleepy");
+                tvPhaseTitle.setText("Still awake?");
+                tvPhaseSubtitle.setText("It may help to leave the bed now");
                 tvWakeIcon.setText("🌑");
                 tvLeaveBed.setVisibility(View.VISIBLE);
                 break;
-
             case PHASE_ESCALATION:
-                tvPhaseTitle.setText("Move to another room");
+                tvPhaseTitle.setText("Leave the room");
                 tvPhaseSubtitle.setText("Return only when you feel sleepy again");
                 tvWakeIcon.setText("🌑");
                 break;
@@ -173,13 +172,11 @@ public class WakeEpisodeActivity extends AppCompatActivity {
     }
 
     private void updateDots(int phase) {
-        // Reset all dots to inactive
         dot1.setBackgroundResource(R.drawable.dot_inactive);
         dot2.setBackgroundResource(R.drawable.dot_inactive);
         dot3.setBackgroundResource(R.drawable.dot_inactive);
         dot4.setBackgroundResource(R.drawable.dot_inactive);
 
-        // Light up dots up to and including current phase
         switch (phase) {
             case PHASE_ESCALATION:
                 dot4.setBackgroundResource(R.drawable.dot_active);
