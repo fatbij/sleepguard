@@ -1,51 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:clickable="true"
-    android:focusable="true">
+    android:background="@drawable/bg_sleep">
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sleep Window"
-        android:textSize="18sp"
-        android:textColor="#CCFFFFFF"
-        android:letterSpacing="0.2"
-        android:layout_marginBottom="16dp" />
+    <!-- Main content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="32dp">
 
-    <!-- Large cycling countdown -->
-    <TextView
-        android:id="@+id/tvCountdown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="30:00"
-        android:textSize="88sp"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:fontFamily="monospace" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="cycle timer"
-        android:textSize="13sp"
-        android:textColor="#88FFFFFF"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="48dp" />
+        <!-- Icon -->
+        <TextView
+            android:id="@+id/tvIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌙"
+            android:textSize="80sp"
+            android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:id="@+id/tvInstruction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Breathe slowly · tap for sleep story"
-        android:textSize="15sp"
-        android:textColor="#CCFFFFFF"
-        android:gravity="center" />
+        <!-- Status -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sleep Window"
+            android:textSize="22sp"
+            android:textColor="#DDEEFF"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginBottom="18dp" />
 
-</LinearLayout>
+        <!-- Countdown - sleep only -->
+        <TextView
+            android:id="@+id/tvCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22:27"
+            android:textSize="64sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-thin"
+            android:letterSpacing="-0.02"
+            android:layout_marginBottom="6dp" />
+
+        <!-- Cycle label - sleep only -->
+        <TextView
+            android:id="@+id/tvCycleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cycle Timer"
+            android:textSize="13sp"
+            android:textColor="#88CCEE"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="48dp" />
+
+        <!-- Morning message - wake only -->
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Have a beautiful,\nproductive day"
+            android:textSize="22sp"
+            android:textColor="#FFF8F0"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.4"
+            android:layout_marginBottom="48dp"
+            android:visibility="gone" />
+
+        <!-- Unlock button -->
+        <TextView
+            android:id="@+id/tvUnlock"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="Tap to unlock"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/pill_soft"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Stop SleepGuard -->
+        <TextView
+            android:id="@+id/tvStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop SleepGuard"
+            android:textSize="13sp"
+            android:textColor="#55FFFFFF"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <!-- Gear button top right -->
+    <ImageButton
+        android:id="@+id/btnGear"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_gear_button"
+        android:src="@drawable/ic_settings"
+        android:padding="10dp"
+        android:contentDescription="Settings" />
+
+    <!-- Settings overlay panel -->
+    <LinearLayout
+        android:id="@+id/settingsPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:background="#EE0A1228"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sleep Settings"
+            android:textSize="20sp"
+            android:textColor="#DDEEFF"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Bedtime -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BEDTIME"
+            android:textSize="11sp"
+            android:textColor="#66AACCEE"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvSettingsSleep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="22:30"
+            android:textSize="36sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:background="@drawable/bg_time_box"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Wake time -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="WAKE TIME"
+            android:textSize="11sp"
+            android:textColor="#66AACCEE"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvSettingsWake"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="07:00"
+            android:textSize="36sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:background="@drawable/bg_time_box"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="40dp" />
+
+        <!-- Done button -->
+        <TextView
+            android:id="@+id/tvSettingsDone"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="Done"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/pill_soft"
+            android:paddingTop="13dp"
+            android:paddingBottom="13dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</FrameLayout>
