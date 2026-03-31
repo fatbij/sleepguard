@@ -5,9 +5,11 @@
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +17,6 @@
         android:icon="@drawable/ic_moon"
         android:theme="@style/Theme.SleepGuard">
 
-        <!-- Main settings activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -26,7 +27,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Lock screen overlay activity -->
         <activity
             android:name=".LockScreenActivity"
             android:exported="true"
@@ -37,13 +37,15 @@
             android:theme="@style/Theme.LockScreen"
             android:excludeFromRecents="true" />
 
-        <!-- Background timer service -->
         <service
             android:name=".TimerService"
             android:exported="false"
-            android:foregroundServiceType="specialUse" />
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="sleep_timer" />
+        </service>
 
-        <!-- Boot receiver to restart service after reboot -->
         <receiver
             android:name=".BootReceiver"
             android:exported="true">
