@@ -1,5 +1,6 @@
 package com.sleepguard;
 
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,14 +14,16 @@ import androidx.core.app.NotificationCompat;
 
 public class TimerService extends Service {
 
-    public static final String ACTION_TICK   = "com.sleepguard.TICK";
-    public static final long   CYCLE_SECONDS = 30 * 60; // 30 minutes
+    public static final String ACTION_TICK = "com.sleepguard.TICK";
+    public static final String ACTION_STOP = "com.sleepguard.STOP_FROM_NOTIFICATION";
+    public static final long   CYCLE_SECONDS = 30 * 60;
 
     private static long sSecondsLeft = CYCLE_SECONDS;
 
     private Handler  handler;
     private Runnable ticker;
     private boolean  running = false;
+    private KeyguardManager keyguardManager;
 
     public static long getSecondsLeft() { return sSecondsLeft; }
 
@@ -28,13 +31,14 @@ public class TimerService extends Service {
     public void onCreate() {
         super.onCreate();
         handler = new Handler(Looper.getMainLooper());
+        keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = (intent != null) ? intent.getAction() : "";
 
-        if ("STOP".equals(action)) {
+        if ("STOP".equals(action) || ACTION_STOP.equals(action)) {
             stopTicker();
             stopForeground(true);
             stopSelf();
@@ -59,15 +63,21 @@ public class TimerService extends Service {
             public void run() {
                 sSecondsLeft--;
                 if (sSecondsLeft <= 0) {
-                    sSecondsLeft = CYCLE_SECONDS; // restart cycle
+                    sSecondsLeft = CYCLE_SECONDS;
                 }
 
-                // Broadcast to any visible LockScreenActivity
+                // Broadcast tick
                 Intent tick = new Intent(ACTION_TICK);
                 tick.putExtra("secondsLeft", sSecondsLeft);
                 sendBroadcast(tick);
 
-                // Update notification
+                // Only launch lock screen if phone is locked AND not suppressed
+                if (keyguardManager != null
+                        && keyguardManager.isKeyguardLocked()
+                        && !LockScreenActivity.isSuppressed()) {
+                    launchLockScreen();
+                }
+
                 NotificationManager nm = getSystemService(NotificationManager.class);
                 nm.notify(1, buildNotification());
 
@@ -75,6 +85,14 @@ public class TimerService extends Service {
             }
         };
         handler.post(ticker);
+    }
+
+    private void launchLockScreen() {
+        Intent i = new Intent(this, LockScreenActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                   Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                   Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(i);
     }
 
     private void stopTicker() {
@@ -87,17 +105,23 @@ public class TimerService extends Service {
         long s = sSecondsLeft % 60;
         String timeStr = String.format(java.util.Locale.UK, "%02d:%02d remaining", m, s);
 
-        PendingIntent pi = PendingIntent.getActivity(this, 0,
+        PendingIntent openApp = PendingIntent.getActivity(this, 0,
             new Intent(this, MainActivity.class),
             PendingIntent.FLAG_IMMUTABLE);
+
+        Intent stopIntent = new Intent(this, TimerService.class);
+        stopIntent.setAction(ACTION_STOP);
+        PendingIntent stopPending = PendingIntent.getService(this, 1,
+            stopIntent, PendingIntent.FLAG_IMMUTABLE);
 
         return new NotificationCompat.Builder(this, "sleepguard")
             .setContentTitle("SleepGuard Active")
             .setContentText(timeStr)
             .setSmallIcon(R.drawable.ic_moon)
-            .setContentIntent(pi)
+            .setContentIntent(openApp)
             .setOngoing(true)
             .setSilent(true)
+            .addAction(0, "Stop", stopPending)
             .build();
     }
 
