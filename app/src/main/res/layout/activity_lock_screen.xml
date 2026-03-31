@@ -14,10 +14,7 @@
         android:gravity="center_horizontal"
         android:padding="32dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
 
         <!-- Icon -->
         <TextView
@@ -37,32 +34,21 @@
             android:textSize="22sp"
             android:textColor="#DDEEFF"
             android:fontFamily="sans-serif-light"
-            android:layout_marginBottom="18dp" />
+            android:layout_marginBottom="8dp" />
 
-        <!-- Countdown - sleep only -->
+        <!-- Soft guidance text -->
         <TextView
-            android:id="@+id/tvCountdown"
+            android:id="@+id/tvGuidance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="22:27"
-            android:textSize="64sp"
-            android:textColor="#FFFFFF"
-            android:fontFamily="sans-serif-thin"
-            android:letterSpacing="-0.02"
-            android:layout_marginBottom="6dp" />
+            android:text="Rest quietly"
+            android:textSize="14sp"
+            android:textColor="#55AACCEE"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.03"
+            android:layout_marginBottom="56dp" />
 
-        <!-- Cycle label - sleep only -->
-        <TextView
-            android:id="@+id/tvCycleLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cycle Timer"
-            android:textSize="13sp"
-            android:textColor="#88CCEE"
-            android:letterSpacing="0.08"
-            android:layout_marginBottom="48dp" />
-
-        <!-- Morning message - wake only -->
+        <!-- Morning message - wake window only -->
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
@@ -73,7 +59,7 @@
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:lineSpacingMultiplier="1.4"
-            android:layout_marginBottom="48dp"
+            android:layout_marginBottom="56dp"
             android:visibility="gone" />
 
         <!-- Unlock button -->
@@ -92,27 +78,40 @@
             android:focusable="true"
             android:layout_marginBottom="12dp" />
 
+        <!-- Begin gently - soft, dim, unobtrusive -->
+        <TextView
+            android:id="@+id/tvBeginGently"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Begin gently"
+            android:textSize="13sp"
+            android:textColor="#44AACCEE"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.05"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="8dp" />
+
         <!-- Stop SleepGuard -->
         <TextView
             android:id="@+id/tvStop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stop SleepGuard"
-            android:textSize="13sp"
-            android:textColor="#55FFFFFF"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:textSize="12sp"
+            android:textColor="#33FFFFFF"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:clickable="true"
             android:focusable="true" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
 
     </LinearLayout>
 
-    <!-- Gear button top right -->
+    <!-- Gear button -->
     <ImageButton
         android:id="@+id/btnGear"
         android:layout_width="40dp"
@@ -144,7 +143,6 @@
             android:fontFamily="sans-serif-light"
             android:layout_marginBottom="32dp" />
 
-        <!-- Bedtime -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -170,7 +168,6 @@
             android:focusable="true"
             android:layout_marginBottom="24dp" />
 
-        <!-- Wake time -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -196,7 +193,6 @@
             android:focusable="true"
             android:layout_marginBottom="40dp" />
 
-        <!-- Done button -->
         <TextView
             android:id="@+id/tvSettingsDone"
             android:layout_width="160dp"

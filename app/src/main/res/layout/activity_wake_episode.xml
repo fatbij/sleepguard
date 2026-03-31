@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wakeRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_sleep">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="32dp">
+
+        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+
+        <!-- Moon -->
+        <TextView
+            android:id="@+id/tvWakeIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌙"
+            android:textSize="72sp"
+            android:layout_marginBottom="28dp" />
+
+        <!-- Phase title -->
+        <TextView
+            android:id="@+id/tvPhaseTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Breathe slowly"
+            android:textSize="26sp"
+            android:textColor="#DDEEFF"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Phase subtitle -->
+        <TextView
+            android:id="@+id/tvPhaseSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No need to check the clock"
+            android:textSize="14sp"
+            android:textColor="#55AACCEE"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_marginBottom="40dp" />
+
+        <!-- Phase dots indicator -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="40dp">
+
+            <View
+                android:id="@+id/dot1"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/dot_active"
+                android:layout_marginEnd="8dp" />
+
+            <View
+                android:id="@+id/dot2"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/dot_inactive"
+                android:layout_marginEnd="8dp" />
+
+            <View
+                android:id="@+id/dot3"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/dot_inactive"
+                android:layout_marginEnd="8dp" />
+
+            <View
+                android:id="@+id/dot4"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/dot_inactive" />
+
+        </LinearLayout>
+
+        <!-- Elapsed time - small and non-dominant -->
+        <TextView
+            android:id="@+id/tvElapsed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0:00"
+            android:textSize="15sp"
+            android:textColor="#33AACCEE"
+            android:fontFamily="sans-serif-thin"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="52dp" />
+
+        <!-- I'm sleepy again -->
+        <TextView
+            android:id="@+id/tvSleepyAgain"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="I'm sleepy again"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/pill_soft"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Leave bed - only shown at threshold -->
+        <TextView
+            android:id="@+id/tvLeaveBed"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Leave the bed"
+            android:textSize="15sp"
+            android:textColor="#CCFFFFFF"
+            android:background="@drawable/pill_button_outline"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone" />
+
+        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+
+    </LinearLayout>
+
+</FrameLayout>

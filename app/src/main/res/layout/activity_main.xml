@@ -13,9 +13,7 @@
         android:gravity="center_horizontal"
         android:padding="32dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="24dp" />
+        <View android:layout_width="match_parent" android:layout_height="32dp" />
 
         <!-- Moon icon -->
         <TextView
@@ -25,7 +23,6 @@
             android:textSize="64sp"
             android:layout_marginBottom="8dp" />
 
-        <!-- App name -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,10 +39,9 @@
             android:text="Set your sleep window"
             android:textSize="13sp"
             android:textColor="#55AACCEE"
-            android:letterSpacing="0.05"
-            android:layout_marginBottom="48dp" />
+            android:layout_marginBottom="40dp" />
 
-        <!-- Bedtime label -->
+        <!-- ── Sleep Window ── -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,7 +51,6 @@
             android:letterSpacing="0.15"
             android:layout_marginBottom="10dp" />
 
-        <!-- Bedtime display box -->
         <TextView
             android:id="@+id/tvSleepTime"
             android:layout_width="match_parent"
@@ -70,9 +65,8 @@
             android:paddingBottom="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginBottom="32dp" />
+            android:layout_marginBottom="28dp" />
 
-        <!-- Wake time label -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,7 +76,6 @@
             android:letterSpacing="0.15"
             android:layout_marginBottom="10dp" />
 
-        <!-- Wake time display box -->
         <TextView
             android:id="@+id/tvWakeTime"
             android:layout_width="match_parent"
@@ -99,7 +92,205 @@
             android:focusable="true"
             android:layout_marginBottom="48dp" />
 
-        <!-- Activate button -->
+        <!-- ── Night Waking Plan ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NIGHT WAKING PLAN"
+            android:textSize="11sp"
+            android:textColor="#66AACCEE"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Breathing -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_time_box"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Breathing"
+                    android:textSize="15sp"
+                    android:textColor="#DDEEFF"
+                    android:fontFamily="sans-serif-light" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Focus on slow breaths"
+                    android:textSize="12sp"
+                    android:textColor="#44AACCEE" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvBreathingMins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 mins"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="sans-serif-thin"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/pill_soft"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp" />
+        </LinearLayout>
+
+        <!-- Resting -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_time_box"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quiet rest"
+                    android:textSize="15sp"
+                    android:textColor="#DDEEFF"
+                    android:fontFamily="sans-serif-light" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Stay still, let sleep return"
+                    android:textSize="12sp"
+                    android:textColor="#44AACCEE" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvRestingMins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10 mins"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="sans-serif-thin"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/pill_soft"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp" />
+        </LinearLayout>
+
+        <!-- Leave bed -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_time_box"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Leave bed after"
+                    android:textSize="15sp"
+                    android:textColor="#DDEEFF"
+                    android:fontFamily="sans-serif-light" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total minutes awake"
+                    android:textSize="12sp"
+                    android:textColor="#44AACCEE" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvLeaveBedMins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15 mins"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="sans-serif-thin"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/pill_soft"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp" />
+        </LinearLayout>
+
+        <!-- Escalation -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_time_box"
+            android:padding="16dp"
+            android:layout_marginBottom="48dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Strong reminder after"
+                    android:textSize="15sp"
+                    android:textColor="#DDEEFF"
+                    android:fontFamily="sans-serif-light" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Leave the room threshold"
+                    android:textSize="12sp"
+                    android:textColor="#44AACCEE" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvEscalationMins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20 mins"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="sans-serif-thin"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/pill_soft"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp" />
+        </LinearLayout>
+
+        <!-- Activate -->
         <TextView
             android:id="@+id/btnActivate"
             android:layout_width="220dp"
@@ -115,7 +306,6 @@
             android:focusable="true"
             android:layout_marginBottom="16dp" />
 
-        <!-- Stop button -->
         <TextView
             android:id="@+id/btnStop"
             android:layout_width="wrap_content"

@@ -37,6 +37,14 @@
             android:theme="@style/Theme.LockScreen"
             android:excludeFromRecents="true" />
 
+        <activity
+            android:name=".WakeEpisodeActivity"
+            android:exported="false"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@style/Theme.LockScreen"
+            android:excludeFromRecents="true" />
+
         <service
             android:name=".TimerService"
             android:exported="false"
