@@ -1,164 +1,126 @@
 package com.sleepguard;
 
-import android.app.TimePickerDialog;
-import android.content.Context;
+import android.app.KeyguardManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.Settings;
-import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-import java.util.Locale;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import androidx.core.app.NotificationCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class TimerService extends Service {
 
-    private SharedPreferences prefs;
-    private int sleepHour = 22, sleepMinute = 30;
-    private int wakeHour  = 7,  wakeMinute  = 0;
-    private TextView tvSleepTime, tvWakeTime;
-    private TextView tvBreathingMins, tvRestingMins, tvLeaveBedMins, tvEscalationMins;
+    public static final String ACTION_TICK = "com.sleepguard.TICK";
+    public static final String ACTION_STOP = "com.sleepguard.STOP_FROM_NOTIFICATION";
+
+    private Handler handler;
+    private Runnable ticker;
+    private boolean running = false;
+    private KeyguardManager keyguardManager;
+
+    private static long sTickCount = 0;
+    public static long getTickCount() { return sTickCount; }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public void onCreate() {
+        super.onCreate();
+        handler = new Handler(Looper.getMainLooper());
+        keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+    }
 
-        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
-        getWindow().getDecorView().setSystemUiVisibility(
-            android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-            android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        );
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = (intent != null) ? intent.getAction() : "";
 
-        prefs = getSharedPreferences("sleepguard", Context.MODE_PRIVATE);
+        if ("STOP".equals(action) || ACTION_STOP.equals(action)) {
+            stopTicker();
+            stopForeground(true);
+            stopSelf();
+            return START_NOT_STICKY;
+        }
 
-        sleepHour   = prefs.getInt("sleepHour",   22);
-        sleepMinute = prefs.getInt("sleepMinute",  30);
-        wakeHour    = prefs.getInt("wakeHour",      7);
-        wakeMinute  = prefs.getInt("wakeMinute",    0);
+        createNotificationChannel();
+        startForeground(1, buildNotification());
 
-        tvSleepTime = findViewById(R.id.tvSleepTime);
-        tvWakeTime  = findViewById(R.id.tvWakeTime);
-        updateTimeLabels();
+        if (!running) {
+            running = true;
+            startTicker();
+        }
 
-        tvSleepTime.setOnClickListener(v -> {
-            new TimePickerDialog(this, (view, h, m) -> {
-                sleepHour = h; sleepMinute = m;
-                prefs.edit().putInt("sleepHour", h).putInt("sleepMinute", m).apply();
-                updateTimeLabels();
-            }, sleepHour, sleepMinute, true).show();
-        });
+        return START_STICKY;
+    }
 
-        tvWakeTime.setOnClickListener(v -> {
-            new TimePickerDialog(this, (view, h, m) -> {
-                wakeHour = h; wakeMinute = m;
-                prefs.edit().putInt("wakeHour", h).putInt("wakeMinute", m).apply();
-                updateTimeLabels();
-            }, wakeHour, wakeMinute, true).show();
-        });
+    private void startTicker() {
+        ticker = new Runnable() {
+            @Override
+            public void run() {
+                sTickCount++;
+                Intent tick = new Intent(ACTION_TICK);
+                sendBroadcast(tick);
 
-        // Night waking plan fields
-        tvBreathingMins  = findViewById(R.id.tvBreathingMins);
-        tvRestingMins    = findViewById(R.id.tvRestingMins);
-        tvLeaveBedMins   = findViewById(R.id.tvLeaveBedMins);
-        tvEscalationMins = findViewById(R.id.tvEscalationMins);
-        updatePlanLabels();
+                if (keyguardManager != null
+                        && keyguardManager.isKeyguardLocked()
+                        && !LockScreenActivity.isSuppressed()) {
+                    launchLockScreen();
+                }
 
-        tvBreathingMins.setOnClickListener(v ->
-            showNumberPicker("Breathing minutes", "breathingMins", 1, 30, tvBreathingMins));
-        tvRestingMins.setOnClickListener(v ->
-            showNumberPicker("Resting minutes", "restingMins", 1, 60, tvRestingMins));
-        tvLeaveBedMins.setOnClickListener(v ->
-            showNumberPicker("Leave bed after (mins awake)", "leaveBedMins", 5, 60, tvLeaveBedMins));
-        tvEscalationMins.setOnClickListener(v ->
-            showNumberPicker("Strong reminder after (mins awake)", "escalationMins", 5, 90, tvEscalationMins));
-
-        // Activate
-        findViewById(R.id.btnActivate).setOnClickListener(v -> {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 1234);
-                Toast.makeText(this,
-                    "Please allow Display over other apps then tap Activate again",
-                    Toast.LENGTH_LONG).show();
-                return;
+                handler.postDelayed(this, 1000);
             }
-            startTimerService();
-        });
-
-        findViewById(R.id.btnStop).setOnClickListener(v -> {
-            Intent service = new Intent(this, TimerService.class);
-            service.setAction("STOP");
-            startService(service);
-            prefs.edit().putBoolean("active", false).apply();
-            Toast.makeText(this, "SleepGuard stopped.", Toast.LENGTH_SHORT).show();
-        });
+        };
+        handler.post(ticker);
     }
 
-    private void showNumberPicker(String title, String prefKey, int min, int max, TextView label) {
-        // Build a simple number input using a dialog with +/- buttons via AlertDialog
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle(title);
-
-        android.widget.NumberPicker picker = new android.widget.NumberPicker(this);
-        picker.setMinValue(min);
-        picker.setMaxValue(max);
-        picker.setValue(prefs.getInt(prefKey, getDefault(prefKey)));
-        picker.setWrapSelectorWheel(false);
-
-        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
-        layout.setGravity(android.view.Gravity.CENTER);
-        layout.setPadding(0, 32, 0, 32);
-        layout.addView(picker);
-        builder.setView(layout);
-
-        builder.setPositiveButton("Done", (dialog, which) -> {
-            int val = picker.getValue();
-            prefs.edit().putInt(prefKey, val).apply();
-            updatePlanLabels();
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+    private void launchLockScreen() {
+        Intent i = new Intent(this, LockScreenActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(i);
     }
 
-    private int getDefault(String key) {
-        switch (key) {
-            case "breathingMins":  return 5;
-            case "restingMins":    return 10;
-            case "leaveBedMins":   return 15;
-            case "escalationMins": return 20;
-            default:               return 5;
-        }
+    private void stopTicker() {
+        running = false;
+        if (ticker != null) handler.removeCallbacks(ticker);
     }
 
-    private void updatePlanLabels() {
-        tvBreathingMins.setText(prefs.getInt("breathingMins",  5) + " mins");
-        tvRestingMins.setText(prefs.getInt("restingMins",     10) + " mins");
-        tvLeaveBedMins.setText(prefs.getInt("leaveBedMins",   15) + " mins");
-        tvEscalationMins.setText(prefs.getInt("escalationMins", 20) + " mins");
+    private Notification buildNotification() {
+        PendingIntent openApp = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class),
+                PendingIntent.FLAG_IMMUTABLE);
+
+        Intent stopIntent = new Intent(this, TimerService.class);
+        stopIntent.setAction(ACTION_STOP);
+        PendingIntent stopPending = PendingIntent.getService(this, 1,
+                stopIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        return new NotificationCompat.Builder(this, "sleepguard")
+                .setContentTitle("SleepGuard Active")
+                .setContentText("Watching over your sleep")
+                .setSmallIcon(R.drawable.ic_moon)
+                .setContentIntent(openApp)
+                .setOngoing(true)
+                .setSilent(true)
+                .addAction(0, "Stop", stopPending)
+                .build();
     }
 
-    private void startTimerService() {
-        Intent service = new Intent(this, TimerService.class);
-        service.setAction("START");
-        startForegroundService(service);
-        prefs.edit().putBoolean("active", true).apply();
-        Toast.makeText(this, "SleepGuard is active. Sleep well 🌙", Toast.LENGTH_LONG).show();
-        finish();
+    private void createNotificationChannel() {
+        NotificationChannel ch = new NotificationChannel(
+                "sleepguard", "SleepGuard", NotificationManager.IMPORTANCE_LOW);
+        ch.setDescription("Watching over your sleep");
+        getSystemService(NotificationManager.class).createNotificationChannel(ch);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1234 && Settings.canDrawOverlays(this)) {
-            startTimerService();
-        }
-    }
+    public IBinder onBind(Intent intent) { return null; }
 
-    private void updateTimeLabels() {
-        tvSleepTime.setText(String.format(Locale.UK, "%02d:%02d", sleepHour, sleepMinute));
-        tvWakeTime.setText(String.format(Locale.UK,  "%02d:%02d", wakeHour,  wakeMinute));
+    @Override
+    public void onDestroy() {
+        stopTicker();
+        super.onDestroy();
     }
 }

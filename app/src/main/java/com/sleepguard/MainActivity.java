@@ -1,5 +1,6 @@
 package com.sleepguard;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private int sleepHour = 22, sleepMinute = 30;
     private int wakeHour  = 7,  wakeMinute  = 0;
     private TextView tvSleepTime, tvWakeTime;
-    private TextView tvBreathingMins, tvRestingMins, tvLeaveBedMins, tvEscalationMins;
+    private TextView tvBreathingMins, tvRestingMins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(
-            android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-            android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         );
 
         prefs = getSharedPreferences("sleepguard", Context.MODE_PRIVATE);
@@ -58,54 +59,51 @@ public class MainActivity extends AppCompatActivity {
             }, wakeHour, wakeMinute, true).show();
         });
 
-        // Night waking plan fields
-        tvBreathingMins  = findViewById(R.id.tvBreathingMins);
-        tvRestingMins    = findViewById(R.id.tvRestingMins);
-        tvLeaveBedMins   = findViewById(R.id.tvLeaveBedMins);
-        tvEscalationMins = findViewById(R.id.tvEscalationMins);
+        tvBreathingMins = findViewById(R.id.tvBreathingMins);
+        tvRestingMins   = findViewById(R.id.tvRestingMins);
         updatePlanLabels();
 
         tvBreathingMins.setOnClickListener(v ->
-            showNumberPicker("Breathing minutes", "breathingMins", 1, 30, tvBreathingMins));
+                showNumberPicker("Breathing minutes", "breathingMins", 1, 30, tvBreathingMins));
         tvRestingMins.setOnClickListener(v ->
-            showNumberPicker("Resting minutes", "restingMins", 1, 60, tvRestingMins));
-        tvLeaveBedMins.setOnClickListener(v ->
-            showNumberPicker("Leave bed after (mins awake)", "leaveBedMins", 5, 60, tvLeaveBedMins));
-        tvEscalationMins.setOnClickListener(v ->
-            showNumberPicker("Strong reminder after (mins awake)", "escalationMins", 5, 90, tvEscalationMins));
+                showNumberPicker("Resting minutes", "restingMins", 1, 60, tvRestingMins));
 
-        // Activate
         findViewById(R.id.btnActivate).setOnClickListener(v -> {
             if (!Settings.canDrawOverlays(this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
+                        Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, 1234);
                 Toast.makeText(this,
-                    "Please allow Display over other apps then tap Activate again",
-                    Toast.LENGTH_LONG).show();
+                        "Please allow Display over other apps then tap Activate again",
+                        Toast.LENGTH_LONG).show();
                 return;
             }
             startTimerService();
         });
 
         findViewById(R.id.btnStop).setOnClickListener(v -> {
-            Intent service = new Intent(this, TimerService.class);
-            service.setAction("STOP");
-            startService(service);
-            prefs.edit().putBoolean("active", false).apply();
-            Toast.makeText(this, "SleepGuard stopped.", Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to stop SleepGuard?")
+                .setPositiveButton("Yes, stop", (dialog, which) -> {
+                    Intent service = new Intent(this, TimerService.class);
+                    service.setAction("STOP");
+                    startService(service);
+                    prefs.edit().putBoolean("active", false).apply();
+                    Toast.makeText(this, "SleepGuard stopped.", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("No, keep active", null)
+                .show();
         });
     }
 
     private void showNumberPicker(String title, String prefKey, int min, int max, TextView label) {
-        // Build a simple number input using a dialog with +/- buttons via AlertDialog
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
 
         android.widget.NumberPicker picker = new android.widget.NumberPicker(this);
         picker.setMinValue(min);
         picker.setMaxValue(max);
-        picker.setValue(prefs.getInt(prefKey, getDefault(prefKey)));
+        picker.setValue(prefs.getInt(prefKey, prefKey.equals("breathingMins") ? 5 : 10));
         picker.setWrapSelectorWheel(false);
 
         android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
@@ -123,21 +121,9 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private int getDefault(String key) {
-        switch (key) {
-            case "breathingMins":  return 5;
-            case "restingMins":    return 10;
-            case "leaveBedMins":   return 15;
-            case "escalationMins": return 20;
-            default:               return 5;
-        }
-    }
-
     private void updatePlanLabels() {
-        tvBreathingMins.setText(prefs.getInt("breathingMins",  5) + " mins");
-        tvRestingMins.setText(prefs.getInt("restingMins",     10) + " mins");
-        tvLeaveBedMins.setText(prefs.getInt("leaveBedMins",   15) + " mins");
-        tvEscalationMins.setText(prefs.getInt("escalationMins", 20) + " mins");
+        tvBreathingMins.setText(prefs.getInt("breathingMins", 5)  + " mins");
+        tvRestingMins.setText(prefs.getInt("restingMins",    10) + " mins");
     }
 
     private void startTimerService() {

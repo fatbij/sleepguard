@@ -1,0 +1,192 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.sleepguard"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+11-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:4:5-81
+11-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:4:22-78
+12    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+12-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:5:5-77
+12-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:5:22-74
+13    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+13-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:6:5-89
+13-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:6:22-86
+14    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+14-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:7:5-77
+14-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:7:22-74
+15    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+15-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:8:5-74
+15-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:8:22-71
+16    <uses-permission android:name="android.permission.WAKE_LOCK" />
+16-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:9:5-68
+16-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:9:22-65
+17    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+17-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:10:5-75
+17-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:10:22-72
+18    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+18-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:11:5-78
+18-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:11:22-75
+19
+20    <permission
+20-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/f0f4ee7c3b88100b2d2cd4b05ab423cd/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
+21        android:name="com.sleepguard.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+21-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/f0f4ee7c3b88100b2d2cd4b05ab423cd/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
+22        android:protectionLevel="signature" />
+22-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/f0f4ee7c3b88100b2d2cd4b05ab423cd/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+23
+24    <uses-permission android:name="com.sleepguard.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+24-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/f0f4ee7c3b88100b2d2cd4b05ab423cd/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
+24-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/f0f4ee7c3b88100b2d2cd4b05ab423cd/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
+25
+26    <application
+26-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:13:5-54:19
+27        android:allowBackup="true"
+27-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:14:9-35
+28        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+28-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/f0f4ee7c3b88100b2d2cd4b05ab423cd/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
+29        android:debuggable="true"
+30        android:extractNativeLibs="false"
+31        android:icon="@mipmap/ic_launcher"
+31-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:16:9-43
+32        android:label="SleepGuard"
+32-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:15:9-35
+33        android:roundIcon="@mipmap/ic_launcher_round"
+33-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:17:9-54
+34        android:theme="@style/Theme.SleepGuard" >
+34-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:18:9-48
+35        <activity
+35-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:20:9-27:20
+36            android:name="com.sleepguard.MainActivity"
+36-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:21:13-41
+37            android:exported="true" >
+37-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:22:13-36
+38            <intent-filter>
+38-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:23:13-26:29
+39                <action android:name="android.intent.action.MAIN" />
+39-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:24:17-69
+39-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:24:25-66
+40
+41                <category android:name="android.intent.category.LAUNCHER" />
+41-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:25:17-77
+41-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:25:27-74
+42            </intent-filter>
+43        </activity>
+44        <activity
+44-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:29:9-35:47
+45            android:name="com.sleepguard.LockScreenActivity"
+45-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:30:13-47
+46            android:excludeFromRecents="true"
+46-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:34:13-46
+47            android:exported="false"
+47-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:31:13-37
+48            android:launchMode="singleTask"
+48-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:35:13-44
+49            android:showWhenLocked="true"
+49-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:32:13-42
+50            android:turnScreenOn="true" />
+50-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:33:13-40
+51        <activity
+51-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:37:9-43:47
+52            android:name="com.sleepguard.WakeEpisodeActivity"
+52-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:38:13-48
+53            android:excludeFromRecents="true"
+53-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:42:13-46
+54            android:exported="false"
+54-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:39:13-37
+55            android:launchMode="singleTask"
+55-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:43:13-44
+56            android:showWhenLocked="true"
+56-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:40:13-42
+57            android:turnScreenOn="true" />
+57-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:41:13-40
+58
+59        <service
+59-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:45:9-52:19
+60            android:name="com.sleepguard.TimerService"
+60-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:46:13-41
+61            android:exported="false"
+61-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:47:13-37
+62            android:foregroundServiceType="specialUse" >
+62-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:48:13-55
+63            <property
+63-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:49:13-51:53
+64                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+64-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:50:17-76
+65                android:value="sleep_guard_timer" />
+65-->/workspaces/sleepguard/app/src/main/AndroidManifest.xml:51:17-50
+66        </service>
+67
+68        <provider
+68-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/4ef2d37eca9ad04b2c397a091ea18fe4/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+69            android:name="androidx.startup.InitializationProvider"
+69-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/4ef2d37eca9ad04b2c397a091ea18fe4/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:25:13-67
+70            android:authorities="com.sleepguard.androidx-startup"
+70-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/4ef2d37eca9ad04b2c397a091ea18fe4/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:26:13-68
+71            android:exported="false" >
+71-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/4ef2d37eca9ad04b2c397a091ea18fe4/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:27:13-37
+72            <meta-data
+72-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/4ef2d37eca9ad04b2c397a091ea18fe4/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+73                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+73-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/4ef2d37eca9ad04b2c397a091ea18fe4/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:30:17-75
+74                android:value="androidx.startup" />
+74-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/4ef2d37eca9ad04b2c397a091ea18fe4/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:31:17-49
+75            <meta-data
+75-->[androidx.lifecycle:lifecycle-process:2.6.1] /home/codespace/.gradle/caches/transforms-3/f41bcf8a8e0d9819e753268d38a40d88/transformed/jetified-lifecycle-process-2.6.1/AndroidManifest.xml:29:13-31:52
+76                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+76-->[androidx.lifecycle:lifecycle-process:2.6.1] /home/codespace/.gradle/caches/transforms-3/f41bcf8a8e0d9819e753268d38a40d88/transformed/jetified-lifecycle-process-2.6.1/AndroidManifest.xml:30:17-78
+77                android:value="androidx.startup" />
+77-->[androidx.lifecycle:lifecycle-process:2.6.1] /home/codespace/.gradle/caches/transforms-3/f41bcf8a8e0d9819e753268d38a40d88/transformed/jetified-lifecycle-process-2.6.1/AndroidManifest.xml:31:17-49
+78            <meta-data
+78-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+79                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+79-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+80                android:value="androidx.startup" />
+80-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+81        </provider>
+82
+83        <receiver
+83-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+84            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+84-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+85            android:directBootAware="false"
+85-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+86            android:enabled="true"
+86-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+87            android:exported="true"
+87-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+88            android:permission="android.permission.DUMP" >
+88-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+89            <intent-filter>
+89-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+90                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+90-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+90-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+91            </intent-filter>
+92            <intent-filter>
+92-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+93                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+93-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+93-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+94            </intent-filter>
+95            <intent-filter>
+95-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+96                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+96-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+96-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+97            </intent-filter>
+98            <intent-filter>
+98-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+99                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+99-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+99-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/transforms-3/d7e75382fd4fb70314ddb3a6f5c689ec/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+100            </intent-filter>
+101        </receiver>
+102    </application>
+103
+104</manifest>

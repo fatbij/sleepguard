@@ -1,0 +1,102 @@
+[
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_pill_soft.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/pill_soft.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_dot_inactive.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/dot_inactive.xml"
+    },
+    {
+        "merged": "com.sleepguard.app-merged_res-32:/drawable_bg_bottom_scrim.xml.flat",
+        "source": "com.sleepguard.app-main-34:/drawable/bg_bottom_scrim.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_bg_settings_panel.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/bg_settings_panel.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/layout_activity_wake_episode.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/layout/activity_wake_episode.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_dot_active.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/dot_active.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_bg_bottom_scrim.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/bg_bottom_scrim.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_bg_time_box.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/bg_time_box.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_ic_launcher_background.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.sleepguard.app-merged_res-32:/layout_activity_wake_episode.xml.flat",
+        "source": "com.sleepguard.app-main-34:/layout/activity_wake_episode.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_bg_wake.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/bg_wake.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_pill_button_outline.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/pill_button_outline.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_bg_night_gradient.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/bg_night_gradient.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_ic_moon.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/ic_moon.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/layout_activity_main.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_bg_sleep.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/bg_sleep.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.sleepguard.app-merged_res-32:/drawable_bg_top_scrim.xml.flat",
+        "source": "com.sleepguard.app-main-34:/drawable/bg_top_scrim.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_ic_settings.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/ic_settings.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/raw_weather_animation.json.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/raw/weather_animation.json"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_pill_button.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/pill_button.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/drawable_bg_gear_button.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/drawable/bg_gear_button.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-merged_res-32:/layout_activity_lock_screen.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.2/com.sleepguard.app-main-34:/layout/activity_lock_screen.xml"
+    }
+]
