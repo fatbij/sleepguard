@@ -178,17 +178,20 @@ public class WakeEpisodeActivity extends AppCompatActivity {
         switch (phase) {
             case PHASE_BREATHING:
                 tvPhaseTitle.setText("Breathe slowly");
+                tvSleepyAgain.setVisibility(View.VISIBLE);
                 tvLeaveBed.setVisibility(View.GONE);
                 lottieIcon.setSpeed(0.267f);
                 lottieIcon.resumeAnimation();
                 break;
             case PHASE_RESTING:
                 tvPhaseTitle.setText("Rest quietly");
+                tvSleepyAgain.setVisibility(View.VISIBLE);
                 tvLeaveBed.setVisibility(View.GONE);
                 lottieIcon.setSpeed(0.3f);
                 break;
             case PHASE_LEAVEBED:
                 tvPhaseTitle.setText("Time to leave the bed");
+                tvSleepyAgain.setVisibility(View.GONE);
                 tvLeaveBed.setVisibility(View.VISIBLE);
                 lottieIcon.pauseAnimation();
                 break;

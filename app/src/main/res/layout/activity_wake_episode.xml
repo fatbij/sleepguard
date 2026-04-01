@@ -24,6 +24,12 @@
         android:layout_gravity="top"
         android:background="@drawable/bg_top_scrim" />
 
+    <!-- Teal/ocean colour overlay for calm sleep mood -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#1A0A2A2E" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="360dp"
