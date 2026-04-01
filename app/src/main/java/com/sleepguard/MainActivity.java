@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
         updatePlanLabels();
 
         tvBreathingMins.setOnClickListener(v ->
-                showNumberPicker("Breathing minutes", "breathingMins", 1, 30, tvBreathingMins));
+                showNumberPicker("Breathing minutes", "breathingMins", 0, 30, tvBreathingMins));
         tvRestingMins.setOnClickListener(v ->
-                showNumberPicker("Resting minutes", "restingMins", 1, 60, tvRestingMins));
+                showNumberPicker("Resting minutes", "restingMins", 0, 60, tvRestingMins));
 
         findViewById(R.id.btnActivate).setOnClickListener(v -> {
             if (!Settings.canDrawOverlays(this)) {

@@ -171,9 +171,9 @@ public class LockScreenActivity extends AppCompatActivity {
             }, wakeHour, wakeMinute, true).show());
 
         tvSettingsBreathing.setOnClickListener(v ->
-            showNumberPicker("Breathing minutes", "breathingMins", 1, 30, tvSettingsBreathing));
+            showNumberPicker("Breathing minutes", "breathingMins", 0, 30, tvSettingsBreathing));
         tvSettingsResting.setOnClickListener(v ->
-            showNumberPicker("Quiet rest minutes", "restingMins",  1, 60, tvSettingsResting));
+            showNumberPicker("Quiet rest minutes", "restingMins",  0, 60, tvSettingsResting));
     }
 
     @Override

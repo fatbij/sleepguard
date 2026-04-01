@@ -20,7 +20,7 @@ public class WakeEpisodeActivity extends AppCompatActivity {
     private static final int PHASE_RESTING   = 1;
     private static final int PHASE_LEAVEBED  = 2;
 
-    private TextView tvPhaseTitle, tvElapsed, tvSleepyAgain, tvLeaveBed;
+    private TextView tvPhaseTitle, tvPhaseSubtitle, tvElapsed, tvSleepyAgain, tvLeaveBed;
     private LottieAnimationView lottieIcon;
     private View dot1, dot2, dot3;
 
@@ -71,7 +71,8 @@ public class WakeEpisodeActivity extends AppCompatActivity {
             prefs.edit().putLong("wakeEpisodeStart", startTimeMs).apply();
         }
 
-        tvPhaseTitle  = findViewById(R.id.tvPhaseTitle);
+        tvPhaseTitle    = findViewById(R.id.tvPhaseTitle);
+        tvPhaseSubtitle = findViewById(R.id.tvPhaseSubtitle);
         tvElapsed     = findViewById(R.id.tvElapsed);
         tvSleepyAgain = findViewById(R.id.tvSleepyAgain);
         tvLeaveBed    = findViewById(R.id.tvLeaveBed);
@@ -85,9 +86,33 @@ public class WakeEpisodeActivity extends AppCompatActivity {
 
 
         // Start Lottie breathing icon
+        // Breathing animation: 5s inhale (forward) + 5s exhale (reverse)
         lottieIcon.setMinAndMaxFrame(0, 160);
+        lottieIcon.setSpeed(0.267f);
+        lottieIcon.setRepeatMode(LottieDrawable.RESTART);
         lottieIcon.setRepeatCount(LottieDrawable.INFINITE);
         lottieIcon.playAnimation();
+
+        // Flip inhale/exhale at animation midpoint (0.5 = direction change in cloud sweep)
+        final boolean[] inhaling = {true};
+        final boolean[] crossedMid = {false};
+        tvPhaseSubtitle.setText("Follow the clouds — Inhale");
+        lottieIcon.addAnimatorUpdateListener(animation -> {
+            float progress = lottieIcon.getProgress();
+            if (progress >= 0.5f && !crossedMid[0]) {
+                crossedMid[0] = true;
+                inhaling[0] = false;
+                if (currentPhase == PHASE_BREATHING) {
+                    tvPhaseSubtitle.setText("Follow the clouds — Exhale");
+                }
+            } else if (progress < 0.1f && crossedMid[0]) {
+                crossedMid[0] = false;
+                inhaling[0] = true;
+                if (currentPhase == PHASE_BREATHING) {
+                    tvPhaseSubtitle.setText("Follow the clouds — Inhale");
+                }
+            }
+        });
 
         // "Fell asleep again" — return to lock screen
         tvSleepyAgain.setOnClickListener(v -> {
@@ -154,14 +179,18 @@ public class WakeEpisodeActivity extends AppCompatActivity {
             case PHASE_BREATHING:
                 tvPhaseTitle.setText("Breathe slowly");
                 tvLeaveBed.setVisibility(View.GONE);
+                lottieIcon.setSpeed(0.267f);
+                lottieIcon.resumeAnimation();
                 break;
             case PHASE_RESTING:
                 tvPhaseTitle.setText("Rest quietly");
                 tvLeaveBed.setVisibility(View.GONE);
+                lottieIcon.setSpeed(0.3f);
                 break;
             case PHASE_LEAVEBED:
                 tvPhaseTitle.setText("Time to leave the bed");
                 tvLeaveBed.setVisibility(View.VISIBLE);
+                lottieIcon.pauseAnimation();
                 break;
         }
     }

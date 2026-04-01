@@ -47,7 +47,19 @@
             android:textColor="#DDEEFF"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvPhaseSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inhale..."
+            android:textSize="15sp"
+            android:textColor="#55AACCEE"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.05"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
