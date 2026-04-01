@@ -1,6 +1,7 @@
 package com.sleepguard;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -122,11 +123,14 @@ public class WakeEpisodeActivity extends AppCompatActivity {
             finish();
         });
 
-        // "Leave room" — dismiss entirely
+        // "Leave bed" — end episode, return to lock screen
         tvLeaveBed.setOnClickListener(v -> {
             prefs.edit().remove("wakeEpisodeStart").apply();
             LockScreenActivity.wakeEpisodeActive = false;
             handler.removeCallbacks(ticker);
+            Intent lockScreen = new Intent(this, LockScreenActivity.class);
+            lockScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(lockScreen);
             finish();
         });
 

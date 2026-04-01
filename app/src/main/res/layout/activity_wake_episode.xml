@@ -28,7 +28,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#1A0A2A2E" />
+        android:background="#550A2A2E" />
 
     <View
         android:layout_width="match_parent"
