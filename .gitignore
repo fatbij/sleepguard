@@ -1,0 +1,16 @@
+cmdtools.zip
+*.zip
+
+# Large SDK files
+*.zip
+*.tar.gz
+
+# Android build outputs
+/build/
+app/build/
+*.apk
+*.aab
+*.ap_
+
+# Local SDK/NDK paths
+local.properties
