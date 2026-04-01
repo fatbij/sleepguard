@@ -126,6 +126,9 @@ public class LockScreenActivity extends AppCompatActivity {
                 .setTitle("Dismiss SleepGuard")
                 .setMessage("Are you sure?")
                 .setPositiveButton("Yes", (d, w) -> {
+                    Intent stop = new Intent(this, TimerService.class);
+                    stop.setAction("STOP");
+                    startService(stop);
                     suppressUntil = System.currentTimeMillis() + SUPPRESS_MS;
                     finish();
                 })
