@@ -7,7 +7,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.sleepguard"
+        applicationId "com.sleepguard.app"
         minSdk 26
         targetSdk 34
         versionCode 1
