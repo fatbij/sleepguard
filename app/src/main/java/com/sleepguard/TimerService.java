@@ -2,12 +2,16 @@ package com.sleepguard;
 
 import android.app.AlarmManager;
 import android.app.KeyguardManager;
+import android.os.PowerManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -33,15 +37,19 @@ public class TimerService extends Service {
     private Runnable ticker;
     private boolean running = false;
     private KeyguardManager keyguardManager;
+    private PowerManager powerManager;
 
     private static long sTickCount = 0;
     public static long getTickCount() { return sTickCount; }
+
+    private BroadcastReceiver screenOnReceiver;
 
     @Override
     public void onCreate() {
         super.onCreate();
         handler = new Handler(Looper.getMainLooper());
         keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        powerManager    = (PowerManager)    getSystemService(POWER_SERVICE);
     }
 
     @Override
@@ -106,6 +114,19 @@ public class TimerService extends Service {
     }
 
     private void startTicker() {
+        // Fire immediately when screen turns on while locked, without waiting for next tick.
+        screenOnReceiver = new BroadcastReceiver() {
+            @Override public void onReceive(Context ctx, Intent i) {
+                if (keyguardManager != null && keyguardManager.isKeyguardLocked()
+                        && !LockScreenActivity.isSuppressed()
+                        && !LockScreenActivity.isShowing
+                        && !LockScreenActivity.wakeEpisodeActive) {
+                    launchLockScreen();
+                }
+            }
+        };
+        registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+
         ticker = new Runnable() {
             @Override
             public void run() {
@@ -113,9 +134,17 @@ public class TimerService extends Service {
                 Intent tick = new Intent(ACTION_TICK);
                 sendBroadcast(tick);
 
+                // Only push the lock screen when the display is already on.
+                // If we launch while the screen is off the FLAG_TURN_SCREEN_ON
+                // window flag would wake the device every tick — instead we rely
+                // on showWhenLocked="true" to surface the activity once the user
+                // presses the power button themselves.
                 if (keyguardManager != null
                         && keyguardManager.isKeyguardLocked()
-                        && !LockScreenActivity.isSuppressed()) {
+                        && powerManager != null && powerManager.isInteractive()
+                        && !LockScreenActivity.isSuppressed()
+                        && !LockScreenActivity.isShowing
+                        && !LockScreenActivity.wakeEpisodeActive) {
                     launchLockScreen();
                 }
 
@@ -153,6 +182,10 @@ public class TimerService extends Service {
     private void stopTicker() {
         running = false;
         if (ticker != null) handler.removeCallbacks(ticker);
+        if (screenOnReceiver != null) {
+            try { unregisterReceiver(screenOnReceiver); } catch (Exception ignored) {}
+            screenOnReceiver = null;
+        }
     }
 
     private Notification buildNotification() {

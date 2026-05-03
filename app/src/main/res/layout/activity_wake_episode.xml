@@ -2,77 +2,53 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/wakeRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0E1A">
+    android:background="#000000">
 
+    <!-- Same day/night background as LockScreen, frozen at night frame via code -->
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieIcon"
+        android:id="@+id/lottieBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleX="2.2"
-        android:scaleY="2.2"
-        app:lottie_rawRes="@raw/weather_animation"
+        app:lottie_fileName="day_night_cycle.json"
         app:lottie_autoPlay="false"
-        app:lottie_loop="true"
-        app:lottie_renderMode="software" />
+        app:lottie_loop="false" />
 
+    <!-- Bottom gradient scrim — identical to lock screen -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_gravity="top"
-        android:background="@drawable/bg_top_scrim" />
-
-    <!-- Teal/ocean colour overlay for calm sleep mood -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#550A2A2E" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="280dp"
         android:layout_gravity="bottom"
         android:background="@drawable/bg_bottom_scrim" />
 
+    <!-- Bottom UI: phase title, dots, elapsed, action buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="150dp">
+        android:paddingBottom="56dp"
+        android:paddingTop="16dp">
 
         <TextView
             android:id="@+id/tvPhaseTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Breathe slowly"
-            android:textSize="22sp"
-            android:textColor="#DDEEFF"
+            android:textSize="26sp"
+            android:textColor="#FFF8F0"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:id="@+id/tvPhaseSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Inhale..."
-            android:textSize="15sp"
-            android:textColor="#55AACCEE"
-            android:fontFamily="sans-serif-light"
-            android:letterSpacing="0.05"
-            android:gravity="center"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="8dp">
 
             <View
                 android:id="@+id/dot1"
@@ -102,19 +78,10 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="13sp"
-            android:textColor="#55AACCEE"
+            android:textColor="#55FFFFFF"
             android:fontFamily="sans-serif-thin"
-            android:letterSpacing="0.05" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="56dp">
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="32dp" />
 
         <TextView
             android:id="@+id/tvSleepyAgain"

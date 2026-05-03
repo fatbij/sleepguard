@@ -8,10 +8,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieDrawable;
 import com.sleepguard.db.SleepDatabase;
 import com.sleepguard.db.SleepSession;
 import com.sleepguard.db.WakeEpisodeRecord;
@@ -25,10 +25,13 @@ public class WakeEpisodeActivity extends AppCompatActivity {
     private static final int PHASE_RESTING   = 1;
     private static final int PHASE_LEAVEBED  = 2;
 
+    private static final float NIGHT_FRAME  = 165f;
+    private static final float TOTAL_FRAMES = 330f;
+
     private final Executor executor = Executors.newSingleThreadExecutor();
 
-    private TextView tvPhaseTitle, tvPhaseSubtitle, tvElapsed, tvSleepyAgain, tvLeaveBed;
-    private LottieAnimationView lottieIcon;
+    private TextView tvPhaseTitle, tvElapsed, tvSleepyAgain, tvLeaveBed;
+    private LottieAnimationView lottieBackground;
     private View dot1, dot2, dot3;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -78,43 +81,24 @@ public class WakeEpisodeActivity extends AppCompatActivity {
             recordEpisodeStart(startTimeMs);
         }
 
-        tvPhaseTitle    = findViewById(R.id.tvPhaseTitle);
-        tvPhaseSubtitle = findViewById(R.id.tvPhaseSubtitle);
-        tvElapsed       = findViewById(R.id.tvElapsed);
-        tvSleepyAgain   = findViewById(R.id.tvSleepyAgain);
-        tvLeaveBed      = findViewById(R.id.tvLeaveBed);
-        lottieIcon      = findViewById(R.id.lottieIcon);
-        dot1            = findViewById(R.id.dot1);
-        dot2            = findViewById(R.id.dot2);
-        dot3            = findViewById(R.id.dot3);
+        tvPhaseTitle  = findViewById(R.id.tvPhaseTitle);
+        tvElapsed     = findViewById(R.id.tvElapsed);
+        tvSleepyAgain = findViewById(R.id.tvSleepyAgain);
+        tvLeaveBed    = findViewById(R.id.tvLeaveBed);
+        dot1          = findViewById(R.id.dot1);
+        dot2          = findViewById(R.id.dot2);
+        dot3          = findViewById(R.id.dot3);
 
-        lottieIcon.setMinAndMaxFrame(0, 160);
-        lottieIcon.setSpeed(0.267f);
-        lottieIcon.setRepeatMode(LottieDrawable.RESTART);
-        lottieIcon.setRepeatCount(LottieDrawable.INFINITE);
-        lottieIcon.playAnimation();
-
-        final boolean[] crossedMid = {false};
-        tvPhaseSubtitle.setText("Follow the clouds — Inhale");
-        lottieIcon.addAnimatorUpdateListener(animation -> {
-            float progress = lottieIcon.getProgress();
-            if (progress >= 0.5f && !crossedMid[0]) {
-                crossedMid[0] = true;
-                if (currentPhase == PHASE_BREATHING)
-                    tvPhaseSubtitle.setText("Follow the clouds — Exhale");
-            } else if (progress < 0.1f && crossedMid[0]) {
-                crossedMid[0] = false;
-                if (currentPhase == PHASE_BREATHING)
-                    tvPhaseSubtitle.setText("Follow the clouds — Inhale");
-            }
-        });
+        lottieBackground = findViewById(R.id.lottieBackground);
+        lottieBackground.addLottieOnCompositionLoadedListener(
+            c -> lottieBackground.setProgress(NIGHT_FRAME / TOTAL_FRAMES));
 
         tvSleepyAgain.setOnClickListener(v -> {
             finishEpisode("fell_asleep");
             prefs.edit().remove("wakeEpisodeStart").apply();
             LockScreenActivity.wakeEpisodeActive = false;
             handler.removeCallbacks(ticker);
-            finish();
+            finish(); // pops back to LockScreenActivity which is kept in the task stack
         });
 
         tvLeaveBed.setOnClickListener(v -> {
@@ -122,10 +106,7 @@ public class WakeEpisodeActivity extends AppCompatActivity {
             prefs.edit().remove("wakeEpisodeStart").apply();
             LockScreenActivity.wakeEpisodeActive = false;
             handler.removeCallbacks(ticker);
-            Intent lockScreen = new Intent(this, LockScreenActivity.class);
-            lockScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(lockScreen);
-            finish();
+            finish(); // pops back to LockScreenActivity which is kept in the task stack
         });
 
         handler.post(ticker);
@@ -188,8 +169,6 @@ public class WakeEpisodeActivity extends AppCompatActivity {
             onPhaseChanged(phase);
             updateDots(phase);
         }
-
-        if (phase == PHASE_LEAVEBED) tvLeaveBed.setVisibility(View.VISIBLE);
     }
 
     private void onPhaseChanged(int phase) {
@@ -198,22 +177,29 @@ public class WakeEpisodeActivity extends AppCompatActivity {
                 tvPhaseTitle.setText("Breathe slowly");
                 tvSleepyAgain.setVisibility(View.VISIBLE);
                 tvLeaveBed.setVisibility(View.GONE);
-                lottieIcon.setSpeed(0.267f);
-                lottieIcon.resumeAnimation();
                 break;
             case PHASE_RESTING:
                 tvPhaseTitle.setText("Rest quietly");
                 tvSleepyAgain.setVisibility(View.VISIBLE);
                 tvLeaveBed.setVisibility(View.GONE);
-                lottieIcon.setSpeed(0.3f);
                 break;
             case PHASE_LEAVEBED:
                 tvPhaseTitle.setText("Time to leave the bed");
                 tvSleepyAgain.setVisibility(View.GONE);
                 tvLeaveBed.setVisibility(View.VISIBLE);
-                lottieIcon.pauseAnimation();
                 break;
         }
+        slideInFromRight(tvPhaseTitle);
+    }
+
+    private void slideInFromRight(View v) {
+        float screenW = getResources().getDisplayMetrics().widthPixels;
+        v.setTranslationX(screenW);
+        v.animate()
+            .translationX(0f)
+            .setDuration(350)
+            .setInterpolator(new DecelerateInterpolator())
+            .start();
     }
 
     private void updateDots(int phase) {

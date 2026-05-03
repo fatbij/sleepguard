@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences("sleepguard", Context.MODE_PRIVATE);
 
+        checkBatteryOptOnStartup();
+
         sleepHour   = prefs.getInt("sleepHour",   22);
         sleepMinute = prefs.getInt("sleepMinute",  30);
         wakeHour    = prefs.getInt("wakeHour",      7);
@@ -84,6 +86,24 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("No, keep active", null)
                 .show());
+    }
+
+    private void checkBatteryOptOnStartup() {
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        if (pm.isIgnoringBatteryOptimizations(getPackageName())) return;
+        new AlertDialog.Builder(this)
+            .setTitle("Allow unrestricted battery use")
+            .setMessage("SleepGuard needs to run overnight without being stopped by the system.\n\nTap 'Open settings' and choose Unrestricted for SleepGuard.")
+            .setPositiveButton("Open settings", (d, w) -> {
+                try {
+                    startActivity(new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                        Uri.parse("package:" + getPackageName())));
+                } catch (Exception ignored) {
+                    startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+                }
+            })
+            .setNegativeButton("Not now", null)
+            .show();
     }
 
     private void checkBatteryOptAndStart() {

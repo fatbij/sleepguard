@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Header row -->
+        <!-- Header -->
         <LinearLayout
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingTop="48dp"
-            android:paddingBottom="16dp"
+            android:paddingBottom="12dp"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
             android:layout_width="match_parent"
@@ -37,174 +37,109 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sleep Log"
+                android:text="Sleep Diary"
                 android:textSize="22sp"
                 android:textColor="#FFDDEEFF"
                 android:gravity="center"
                 android:fontFamily="sans-serif-light" />
 
-            <!-- Spacer for symmetry -->
             <View android:layout_width="40dp" android:layout_height="40dp" />
         </LinearLayout>
 
-        <!-- Sleep grid (calendar heat map) -->
-        <com.sleepguard.SleepGridView
-            android:id="@+id/sleepGrid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp" />
-
-        <!-- Hint -->
-        <TextView
-            android:id="@+id/tvHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tap a night for details"
-            android:textSize="11sp"
-            android:textColor="#33AACCEE"
-            android:gravity="center"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp" />
-
-        <!-- Session detail panel (hidden until a session is selected) -->
+        <!-- Chart legend -->
         <LinearLayout
-            android:id="@+id/detailPanel"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:background="@drawable/bg_settings_panel"
-            android:padding="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="20dp"
+            android:paddingBottom="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Date + Edit button row -->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <TextView
-                    android:id="@+id/tvDetailDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="16sp"
-                    android:textColor="#FFDDEEFF"
-                    android:fontFamily="sans-serif-light" />
-
-                <TextView
-                    android:id="@+id/btnEdit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Edit"
-                    android:textSize="12sp"
-                    android:textColor="#FF7EB8FF"
-                    android:background="@drawable/pill_button_outline"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:focusable="true"
-                    android:clickable="true" />
-            </LinearLayout>
-
-            <!-- Sleep window row -->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp">
-
-                <TextView
-                    android:id="@+id/tvDetailWindow"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:textColor="#88AACCEE" />
-
-                <TextView
-                    android:id="@+id/tvDetailTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:textColor="#FFFFFFFF"
-                    android:fontFamily="sans-serif-thin" />
-            </LinearLayout>
-
-            <!-- Stats -->
             <TextView
-                android:id="@+id/tvDetailStats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#66AACCEE"
-                android:layout_marginBottom="8dp" />
-
-            <!-- Quality rating row (hidden if unrated) -->
-            <LinearLayout
-                android:id="@+id/ratingRow"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:id="@+id/star1" android:layout_width="22dp" android:layout_height="22dp" android:text="★" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-                <TextView android:id="@+id/star2" android:layout_width="22dp" android:layout_height="22dp" android:text="★" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-                <TextView android:id="@+id/star3" android:layout_width="22dp" android:layout_height="22dp" android:text="★" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-                <TextView android:id="@+id/star4" android:layout_width="22dp" android:layout_height="22dp" android:text="★" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-                <TextView android:id="@+id/star5" android:layout_width="22dp" android:layout_height="22dp" android:text="★" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-            </LinearLayout>
-
-            <!-- Restedness row (hidden if unrated) -->
-            <LinearLayout
-                android:id="@+id/restedRow"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp">
-                <TextView android:id="@+id/rstar1" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-                <TextView android:id="@+id/rstar2" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-                <TextView android:id="@+id/rstar3" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-                <TextView android:id="@+id/rstar4" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-                <TextView android:id="@+id/rstar5" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
-            </LinearLayout>
-
-            <!-- Onset (hidden if 0) -->
+                android:text="●"
+                android:textSize="10sp"
+                android:textColor="#AA7EB8FF"
+                android:layout_marginEnd="3dp" />
             <TextView
-                android:id="@+id/tvDetailOnset"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#66AACCEE"
-                android:layout_marginTop="6dp" />
+                android:text="Bedtime"
+                android:textSize="10sp"
+                android:textColor="#44AACCEE"
+                android:layout_marginEnd="12dp" />
 
-            <!-- Notes (hidden if empty) -->
             <TextView
-                android:id="@+id/tvDetailNotes"
-                android:visibility="gone"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#88AACCEE"
-                android:fontFamily="sans-serif-light"
-                android:layout_marginTop="6dp" />
+                android:text="●"
+                android:textSize="10sp"
+                android:textColor="#AA4DCCAA"
+                android:layout_marginEnd="3dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wake"
+                android:textSize="10sp"
+                android:textColor="#44AACCEE" />
+
         </LinearLayout>
 
-        <!-- Summary stats bar row 1 -->
+        <!-- 7-day trend chart -->
+        <com.sleepguard.SleepChartView
+            android:id="@+id/sleepChart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
+
+        <!-- Tap hint -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tap a night to view or edit"
+            android:textSize="11sp"
+            android:textColor="#22AACCEE"
+            android:gravity="center"
+            android:paddingTop="6dp"
+            android:paddingBottom="2dp" />
+
+        <!-- Section divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="#15AACCEE" />
+
+        <!-- Scrollable day list -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:clipToPadding="false" />
+
+        <!-- Empty state -->
+        <TextView
+            android:id="@+id/tvEmptyState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="No sleep sessions yet.\nActivate SleepGuard tonight to start tracking."
+            android:textSize="14sp"
+            android:textColor="#44AACCEE"
+            android:gravity="center"
+            android:padding="32dp" />
+
+        <!-- Summary stats row 1 -->
         <LinearLayout
             android:orientation="horizontal"
             android:background="@drawable/bg_settings_panel"
             android:padding="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_width="match_parent"
@@ -226,12 +161,13 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Summary stats bar row 2 -->
+        <!-- Summary stats row 2 -->
         <LinearLayout
             android:orientation="horizontal"
             android:background="@drawable/bg_settings_panel"
             android:padding="16dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="32dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_width="match_parent"
@@ -253,17 +189,5 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Empty state -->
-        <TextView
-            android:id="@+id/tvEmptyState"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="No sleep sessions yet.\nActivate SleepGuard tonight to start tracking."
-            android:textSize="14sp"
-            android:textColor="#44AACCEE"
-            android:gravity="center"
-            android:padding="32dp" />
-
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

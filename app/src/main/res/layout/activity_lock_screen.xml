@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <!-- 1. Full-screen Lottie — behind everything -->
+    <!-- Full-screen Lottie — behind everything, never moves -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieAnimation"
         android:layout_width="match_parent"
@@ -17,14 +17,14 @@
         app:lottie_autoPlay="false"
         app:lottie_loop="false" />
 
-    <!-- 2. Bottom gradient scrim for button readability -->
+    <!-- Bottom gradient scrim -->
     <View
         android:layout_width="match_parent"
         android:layout_height="280dp"
         android:layout_gravity="bottom"
         android:background="@drawable/bg_bottom_scrim" />
 
-    <!-- 3. Gear button — top start -->
+    <!-- Gear button — top start -->
     <ImageButton
         android:id="@+id/btnGear"
         android:layout_width="40dp"
@@ -36,7 +36,7 @@
         android:padding="10dp"
         android:contentDescription="Settings" />
 
-    <!-- 4. X close — top end -->
+    <!-- X close — top end -->
     <TextView
         android:id="@+id/tvClose"
         android:layout_width="40dp"
@@ -50,8 +50,9 @@
         android:clickable="true"
         android:focusable="true" />
 
-    <!-- 5. Bottom UI overlay (buttons + wake text) -->
+    <!-- ── Sleep / morning panel (shown when not in a wake episode) ── -->
     <LinearLayout
+        android:id="@+id/sleepPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
@@ -60,7 +61,6 @@
         android:paddingBottom="56dp"
         android:paddingTop="16dp">
 
-        <!-- Wake-mode greeting (gone during sleep) -->
         <TextView
             android:id="@+id/tvMorningGreeting"
             android:layout_width="wrap_content"
@@ -86,7 +86,6 @@
             android:layout_marginBottom="32dp"
             android:visibility="gone" />
 
-        <!-- I'm awake — ghost text, matches Unlock phone style -->
         <TextView
             android:id="@+id/tvBeginGently"
             android:layout_width="wrap_content"
@@ -103,7 +102,6 @@
             android:focusable="true"
             android:layout_marginBottom="10dp" />
 
-        <!-- Unlock phone — secondary ghost text below -->
         <TextView
             android:id="@+id/tvUnlock"
             android:layout_width="wrap_content"
@@ -120,7 +118,104 @@
 
     </LinearLayout>
 
-    <!-- 6. Settings overlay — full screen -->
+    <!-- ── Wake episode panel (shown when user taps I'm awake) ── -->
+    <LinearLayout
+        android:id="@+id/wakePanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingBottom="56dp"
+        android:paddingTop="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvPhaseTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Breathe slowly"
+            android:textSize="26sp"
+            android:textColor="#FFF8F0"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="8dp">
+
+            <View
+                android:id="@+id/dot1"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/dot_active"
+                android:layout_marginEnd="8dp" />
+
+            <View
+                android:id="@+id/dot2"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/dot_inactive"
+                android:layout_marginEnd="8dp" />
+
+            <View
+                android:id="@+id/dot3"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/dot_inactive" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvElapsed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="13sp"
+            android:textColor="#55FFFFFF"
+            android:fontFamily="sans-serif-thin"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="32dp" />
+
+        <TextView
+            android:id="@+id/tvSleepyAgain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I'm sleepy again"
+            android:textSize="15sp"
+            android:textColor="#CCFFFFFF"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.05"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/tvLeaveBed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leave the bed"
+            android:textSize="15sp"
+            android:textColor="#CCFFFFFF"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.05"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- Settings overlay — full screen -->
     <FrameLayout
         android:id="@+id/settingsPanel"
         android:layout_width="match_parent"
@@ -149,7 +244,6 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_marginBottom="32dp" />
 
-                <!-- Bedtime -->
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="BEDTIME" android:textSize="11sp" android:textColor="#66AACCEE"
                     android:letterSpacing="0.15" android:layout_marginBottom="8dp" />
@@ -161,7 +255,6 @@
                     android:paddingBottom="12dp" android:clickable="true" android:focusable="true"
                     android:layout_marginBottom="24dp" />
 
-                <!-- Wake time -->
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="WAKE TIME" android:textSize="11sp" android:textColor="#66AACCEE"
                     android:letterSpacing="0.15" android:layout_marginBottom="8dp" />
@@ -173,13 +266,11 @@
                     android:paddingBottom="12dp" android:clickable="true" android:focusable="true"
                     android:layout_marginBottom="32dp" />
 
-                <!-- Night waking plan -->
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="NIGHT WAKING PLAN" android:textSize="11sp"
                     android:textColor="#66AACCEE" android:letterSpacing="0.15"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Breathing -->
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="horizontal" android:gravity="center_vertical"
                     android:background="@drawable/bg_time_box" android:padding="16dp"
@@ -202,7 +293,6 @@
                         android:paddingTop="6dp" android:paddingBottom="6dp" />
                 </LinearLayout>
 
-                <!-- Quiet rest -->
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="horizontal" android:gravity="center_vertical"
                     android:background="@drawable/bg_time_box" android:padding="16dp"
@@ -224,10 +314,6 @@
                         android:paddingStart="16dp" android:paddingEnd="16dp"
                         android:paddingTop="6dp" android:paddingBottom="6dp" />
                 </LinearLayout>
-
-                <!-- Leave bed -->
-
-                <!-- Escalation -->
 
                 <TextView
                     android:id="@+id/tvSettingsDone"

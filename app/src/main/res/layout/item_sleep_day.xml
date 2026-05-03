@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- Date: "Mon\n3 May" -->
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="52dp"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#88AACCEE"
+        android:lineSpacingMultiplier="1.25"
+        android:fontFamily="sans-serif-light" />
+
+    <!-- Sleep window + duration -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="10dp">
+
+        <TextView
+            android:id="@+id/tvWindow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#FFDDEEFF"
+            android:fontFamily="sans-serif-light" />
+
+        <TextView
+            android:id="@+id/tvDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:textColor="#44AACCEE"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
+    <!-- Quality star + rating -->
+    <TextView
+        android:id="@+id/tvQuality"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:gravity="end|center_vertical"
+        android:fontFamily="sans-serif-medium" />
+
+</LinearLayout>

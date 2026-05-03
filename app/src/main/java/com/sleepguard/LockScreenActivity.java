@@ -14,20 +14,24 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
+import com.sleepguard.db.SleepDatabase;
+import com.sleepguard.db.SleepSession;
+import com.sleepguard.db.WakeEpisodeRecord;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class LockScreenActivity extends AppCompatActivity {
 
     // Day-and-Night-Cycle.json  330 frames @ 60 fps
-    // Frame 165  = mid-night hold
-    // Frame 165→329 = full sunrise arc to end of composition
     private static final float FRAME_MOON_HOLD   = 165f;
     private static final float FRAME_TRANS_START = 165f;
     private static final float FRAME_TRANS_END   = 329f;
@@ -37,8 +41,16 @@ public class LockScreenActivity extends AppCompatActivity {
     private static final long SUPPRESS_MS = 5_000;
     public  static long    suppressUntil    = 0;
     public  static boolean wakeEpisodeActive = false;
+    public  static boolean isShowing         = false;
 
-    // Views
+    // Wake episode phases
+    private static final int PHASE_BREATHING = 0;
+    private static final int PHASE_RESTING   = 1;
+    private static final int PHASE_LEAVEBED  = 2;
+
+    private final Executor executor = Executors.newSingleThreadExecutor();
+
+    // Sleep-mode views
     private LottieAnimationView lottieAnimation;
     private TextView  tvUnlock, tvBeginGently;
     private TextView  tvMorningGreeting, tvMorningMessage;
@@ -48,11 +60,25 @@ public class LockScreenActivity extends AppCompatActivity {
     private TextView  tvSettingsSleep, tvSettingsWake;
     private TextView  tvSettingsBreathing, tvSettingsResting;
 
-    // State
+    // Panels
+    private View sleepPanel, wakePanel;
+
+    // Wake episode views
+    private TextView tvPhaseTitle, tvElapsed, tvSleepyAgain, tvLeaveBed;
+    private View dot1, dot2, dot3;
+
+    // Wake episode state
+    private int currentPhase = -1;
+    private long breathingEndSec, restingEndSec;
+    private long wakeStartMs;
+    private Runnable episodeTicker;
+
+    // Lottie transition state
     private final Handler handler         = new Handler(Looper.getMainLooper());
     private SharedPreferences prefs;
     private boolean isTransitioning  = false;
     private boolean transitionPlayed = false;
+    private boolean firstDisplay     = true;
     private Runnable transitionFallback = null;
 
     private int sleepHour, sleepMinute, wakeHour, wakeMinute;
@@ -65,7 +91,7 @@ public class LockScreenActivity extends AppCompatActivity {
 
     private final BroadcastReceiver timerReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context ctx, Intent i) {
-            if (!isTransitioning) updateDisplay();
+            if (!isTransitioning && !wakeEpisodeActive) updateDisplay();
         }
     };
 
@@ -76,9 +102,8 @@ public class LockScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (isSuppressed() || wakeEpisodeActive) { finish(); return; }
+        if (isSuppressed()) { finish(); return; }
 
-        // Full immersive
         getWindow().addFlags(
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
             WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON   |
@@ -114,11 +139,20 @@ public class LockScreenActivity extends AppCompatActivity {
         tvSettingsBreathing = findViewById(R.id.tvSettingsBreathing);
         tvSettingsResting   = findViewById(R.id.tvSettingsResting);
 
+        sleepPanel    = findViewById(R.id.sleepPanel);
+        wakePanel     = findViewById(R.id.wakePanel);
+        tvPhaseTitle  = findViewById(R.id.tvPhaseTitle);
+        tvElapsed     = findViewById(R.id.tvElapsed);
+        tvSleepyAgain = findViewById(R.id.tvSleepyAgain);
+        tvLeaveBed    = findViewById(R.id.tvLeaveBed);
+        dot1          = findViewById(R.id.dot1);
+        dot2          = findViewById(R.id.dot2);
+        dot3          = findViewById(R.id.dot3);
+
         updateSettingsLabels();
 
-        // Composition must be loaded before any frame calls
         lottieAnimation.addLottieOnCompositionLoadedListener(c -> {
-            if (!isTransitioning) updateDisplay();
+            if (!isTransitioning && !wakeEpisodeActive) updateDisplay();
         });
 
         tvClose.setOnClickListener(v ->
@@ -139,13 +173,11 @@ public class LockScreenActivity extends AppCompatActivity {
             finish();
         });
 
-        tvBeginGently.setOnClickListener(v -> {
-            suppressUntil    = System.currentTimeMillis() + SUPPRESS_MS;
-            wakeEpisodeActive = true;
-            startActivity(new Intent(this, WakeEpisodeActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            finish();
-        });
+        tvBeginGently.setOnClickListener(v -> startWakeEpisode());
+
+        tvSleepyAgain.setOnClickListener(v -> endWakeEpisode("fell_asleep"));
+
+        tvLeaveBed.setOnClickListener(v -> endWakeEpisode("left_bed"));
 
         btnGear.setOnClickListener(v -> {
             updateSettingsLabels();
@@ -156,7 +188,7 @@ public class LockScreenActivity extends AppCompatActivity {
             settingsPanel.setVisibility(View.GONE);
             loadTimes();
             transitionPlayed = false;
-            updateDisplay();
+            if (!wakeEpisodeActive) updateDisplay();
         });
 
         tvSettingsSleep.setOnClickListener(v ->
@@ -177,16 +209,37 @@ public class LockScreenActivity extends AppCompatActivity {
             showNumberPicker("Breathing minutes", "breathingMins", 0, 30, tvSettingsBreathing));
         tvSettingsResting.setOnClickListener(v ->
             showNumberPicker("Quiet rest minutes", "restingMins",  0, 60, tvSettingsResting));
+
+        // Restore wake episode if it was active when activity was recreated
+        if (wakeEpisodeActive) {
+            sleepPanel.setVisibility(View.GONE);
+            wakePanel.setVisibility(View.VISIBLE);
+            loadThresholds();
+            wakeStartMs = prefs.getLong("wakeEpisodeStart", System.currentTimeMillis());
+            startEpisodeTicker();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isShowing = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isShowing = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (isSuppressed() || wakeEpisodeActive) { finish(); return; }
+        if (isSuppressed()) { finish(); return; }
         registerReceiver(timerReceiver,
             new IntentFilter(TimerService.ACTION_TICK),
             Context.RECEIVER_NOT_EXPORTED);
-        if (!isTransitioning) updateDisplay();
+        if (!wakeEpisodeActive && !isTransitioning) updateDisplay();
     }
 
     @Override
@@ -194,12 +247,160 @@ public class LockScreenActivity extends AppCompatActivity {
         super.onPause();
         handler.removeCallbacks(wakeTransitionTrigger);
         if (transitionFallback != null) handler.removeCallbacks(transitionFallback);
-        // Do NOT call lottieAnimation.cancelAnimation() here — it breaks
-        // playAnimation() if the activity quickly resumes
         try { unregisterReceiver(timerReceiver); } catch (Exception ignored) {}
     }
 
-    // ── Display ────────────────────────────────────────────────────────────
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (episodeTicker != null) handler.removeCallbacks(episodeTicker);
+    }
+
+    // ── Wake episode ───────────────────────────────────────────────────────
+
+    private void startWakeEpisode() {
+        wakeEpisodeActive = true;
+        loadThresholds();
+        currentPhase = -1;
+
+        wakeStartMs = prefs.getLong("wakeEpisodeStart", 0);
+        if (wakeStartMs == 0) {
+            wakeStartMs = System.currentTimeMillis();
+            prefs.edit().putLong("wakeEpisodeStart", wakeStartMs).apply();
+            recordEpisodeStart(wakeStartMs);
+        }
+
+        sleepPanel.setVisibility(View.GONE);
+        wakePanel.setVisibility(View.VISIBLE);
+        startEpisodeTicker();
+    }
+
+    private void endWakeEpisode(String outcome) {
+        if (episodeTicker != null) {
+            handler.removeCallbacks(episodeTicker);
+            episodeTicker = null;
+        }
+        finishEpisode(outcome);
+        prefs.edit().remove("wakeEpisodeStart").apply();
+        wakeEpisodeActive = false;
+        currentPhase = -1;
+
+        wakePanel.setVisibility(View.GONE);
+        sleepPanel.setVisibility(View.VISIBLE);
+        updateDisplay();
+    }
+
+    private void startEpisodeTicker() {
+        if (episodeTicker != null) handler.removeCallbacks(episodeTicker);
+        episodeTicker = new Runnable() {
+            @Override public void run() {
+                long elapsed = (System.currentTimeMillis() - wakeStartMs) / 1000;
+                updateEpisodeDisplay(elapsed);
+                handler.postDelayed(this, 1000);
+            }
+        };
+        handler.post(episodeTicker);
+    }
+
+    private void updateEpisodeDisplay(long elapsedSeconds) {
+        long mins = elapsedSeconds / 60, secs = elapsedSeconds % 60;
+        tvElapsed.setText(String.format(Locale.UK, "%d:%02d", mins, secs));
+
+        int phase;
+        if      (elapsedSeconds < breathingEndSec) phase = PHASE_BREATHING;
+        else if (elapsedSeconds < restingEndSec)   phase = PHASE_RESTING;
+        else                                       phase = PHASE_LEAVEBED;
+
+        if (phase != currentPhase) {
+            currentPhase = phase;
+            onPhaseChanged(phase);
+            updateDots(phase);
+        }
+    }
+
+    private void onPhaseChanged(int phase) {
+        switch (phase) {
+            case PHASE_BREATHING:
+                tvPhaseTitle.setText("Breathe slowly");
+                tvSleepyAgain.setVisibility(View.VISIBLE);
+                tvLeaveBed.setVisibility(View.GONE);
+                break;
+            case PHASE_RESTING:
+                tvPhaseTitle.setText("Rest quietly");
+                tvSleepyAgain.setVisibility(View.VISIBLE);
+                tvLeaveBed.setVisibility(View.GONE);
+                break;
+            case PHASE_LEAVEBED:
+                tvPhaseTitle.setText("Time to leave the bed");
+                tvSleepyAgain.setVisibility(View.GONE);
+                tvLeaveBed.setVisibility(View.VISIBLE);
+                break;
+        }
+        slideInFromRight(tvPhaseTitle);
+    }
+
+    private void slideInFromRight(View v) {
+        float screenW = getResources().getDisplayMetrics().widthPixels;
+        v.setTranslationX(screenW);
+        v.animate()
+            .translationX(0f)
+            .setDuration(350)
+            .setInterpolator(new DecelerateInterpolator())
+            .start();
+    }
+
+    private void updateDots(int phase) {
+        dot1.setBackgroundResource(R.drawable.dot_inactive);
+        dot2.setBackgroundResource(R.drawable.dot_inactive);
+        dot3.setBackgroundResource(R.drawable.dot_inactive);
+        switch (phase) {
+            case PHASE_LEAVEBED:  dot3.setBackgroundResource(R.drawable.dot_active);
+            // fall through
+            case PHASE_RESTING:   dot2.setBackgroundResource(R.drawable.dot_active);
+            // fall through
+            case PHASE_BREATHING: dot1.setBackgroundResource(R.drawable.dot_active);
+                break;
+        }
+    }
+
+    private void loadThresholds() {
+        int breathingMins = prefs.getInt("breathingMins", 5);
+        int restingMins   = prefs.getInt("restingMins",  10);
+        breathingEndSec   = breathingMins * 60L;
+        restingEndSec     = breathingEndSec + (restingMins * 60L);
+    }
+
+    private void recordEpisodeStart(long startMs) {
+        executor.execute(() -> {
+            SleepDatabase db = SleepDatabase.getInstance(this);
+            SleepSession active = db.sleepDao().getActiveSession();
+            if (active == null) return;
+            if (db.sleepDao().getActiveEpisode(active.id) != null) return;
+            WakeEpisodeRecord ep = new WakeEpisodeRecord();
+            ep.sessionId = active.id;
+            ep.startMs   = startMs;
+            ep.endMs     = 0;
+            ep.outcome   = "";
+            db.sleepDao().insertEpisode(ep);
+        });
+    }
+
+    private void finishEpisode(String outcome) {
+        long endMs = System.currentTimeMillis();
+        executor.execute(() -> {
+            SleepDatabase db = SleepDatabase.getInstance(this);
+            SleepSession active = db.sleepDao().getActiveSession();
+            if (active == null) return;
+            WakeEpisodeRecord ep = db.sleepDao().getActiveEpisode(active.id);
+            if (ep != null) {
+                ep.endMs   = endMs;
+                ep.outcome = outcome;
+                db.sleepDao().updateEpisode(ep);
+            }
+        });
+    }
+
+    // ── Lottie display ─────────────────────────────────────────────────────
 
     private void updateDisplay() {
         if (isTransitioning) return;
@@ -207,9 +408,14 @@ public class LockScreenActivity extends AppCompatActivity {
             transitionPlayed = false;
             showSleepMode();
         } else {
-            if (!transitionPlayed) playTransition();
-            else                   showWakeMode();
+            if (!transitionPlayed) {
+                if (firstDisplay) { transitionPlayed = true; showWakeMode(); }
+                else              { playTransition(); }
+            } else {
+                showWakeMode();
+            }
         }
+        firstDisplay = false;
     }
 
     private void showSleepMode() {
@@ -218,11 +424,6 @@ public class LockScreenActivity extends AppCompatActivity {
         tvUnlock.setVisibility(View.VISIBLE);
         tvBeginGently.setVisibility(View.VISIBLE);
 
-        // Freeze at mid-night WITHOUT calling cancelAnimation().
-        // cancelAnimation() sets an internal flag that makes the subsequent
-        // playAnimation() call in playTransition() a silent no-op in many
-        // Lottie versions.  Simply setting progress is enough to freeze —
-        // the animator isn't running so there is nothing to cancel.
         lottieAnimation.setMinAndMaxProgress(0f, 1f);
         lottieAnimation.setProgress(FRAME_MOON_HOLD / TOTAL_FRAMES);
 
@@ -233,17 +434,14 @@ public class LockScreenActivity extends AppCompatActivity {
         isTransitioning = true;
         final boolean[] done = {false};
 
-        // Remove any stale listeners — do NOT call cancelAnimation().
         lottieAnimation.removeAllAnimatorListeners();
 
-        float startP = FRAME_TRANS_START / TOTAL_FRAMES;  // 0.500
-        float endP   = FRAME_TRANS_END   / TOTAL_FRAMES;  // 0.997
+        float startP = FRAME_TRANS_START / TOTAL_FRAMES;
+        float endP   = FRAME_TRANS_END   / TOTAL_FRAMES;
         lottieAnimation.setMinAndMaxProgress(startP, endP);
-        lottieAnimation.setSpeed(0.3f);       // ~165 frames / (60 * 0.3) ≈ 9 s
+        lottieAnimation.setSpeed(0.3f);
         lottieAnimation.setRepeatCount(0);
 
-        // Fallback: if onAnimationEnd never fires, complete after expected
-        // duration + 3 s buffer so the screen never gets stuck
         long safeMs = (long)(((FRAME_TRANS_END - FRAME_TRANS_START) / (60f * 0.3f)) * 1000L) + 3000L;
         if (transitionFallback != null) handler.removeCallbacks(transitionFallback);
         transitionFallback = () -> {
@@ -262,8 +460,6 @@ public class LockScreenActivity extends AppCompatActivity {
             @Override public void onAnimationCancel(Animator a) { /* fallback handles it */ }
         });
 
-        // post() ensures the min/max progress change is committed to the
-        // drawable before playAnimation() runs — eliminates frame-0 flash
         lottieAnimation.post(() -> lottieAnimation.playAnimation());
     }
 
@@ -280,7 +476,6 @@ public class LockScreenActivity extends AppCompatActivity {
         tvMorningGreeting.setVisibility(View.VISIBLE);
         tvMorningMessage.setVisibility(View.VISIBLE);
 
-        // Freeze at full-day frame — again, no cancelAnimation()
         lottieAnimation.setMinAndMaxProgress(0f, 1f);
         lottieAnimation.setProgress(FRAME_SUN_HOLD / TOTAL_FRAMES);
     }
