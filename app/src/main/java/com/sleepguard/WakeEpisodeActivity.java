@@ -12,14 +12,20 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieDrawable;
+import com.sleepguard.db.SleepDatabase;
+import com.sleepguard.db.SleepSession;
+import com.sleepguard.db.WakeEpisodeRecord;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class WakeEpisodeActivity extends AppCompatActivity {
 
-    // 3 phases only — Breathing → Resting → Leave room
     private static final int PHASE_BREATHING = 0;
     private static final int PHASE_RESTING   = 1;
     private static final int PHASE_LEAVEBED  = 2;
+
+    private final Executor executor = Executors.newSingleThreadExecutor();
 
     private TextView tvPhaseTitle, tvPhaseSubtitle, tvElapsed, tvSleepyAgain, tvLeaveBed;
     private LottieAnimationView lottieIcon;
@@ -30,9 +36,8 @@ public class WakeEpisodeActivity extends AppCompatActivity {
     private int currentPhase = -1;
     private SharedPreferences prefs;
 
-    // Phase boundary timestamps in seconds from start
-    private long breathingEndSec;   // end of breathing phase
-    private long restingEndSec;     // end of resting phase → show leave room
+    private long breathingEndSec;
+    private long restingEndSec;
 
     private final Runnable ticker = new Runnable() {
         @Override public void run() {
@@ -70,61 +75,50 @@ public class WakeEpisodeActivity extends AppCompatActivity {
         if (startTimeMs == 0) {
             startTimeMs = System.currentTimeMillis();
             prefs.edit().putLong("wakeEpisodeStart", startTimeMs).apply();
+            recordEpisodeStart(startTimeMs);
         }
 
         tvPhaseTitle    = findViewById(R.id.tvPhaseTitle);
         tvPhaseSubtitle = findViewById(R.id.tvPhaseSubtitle);
-        tvElapsed     = findViewById(R.id.tvElapsed);
-        tvSleepyAgain = findViewById(R.id.tvSleepyAgain);
-        tvLeaveBed    = findViewById(R.id.tvLeaveBed);
-        lottieIcon    = findViewById(R.id.lottieIcon);
-        dot1          = findViewById(R.id.dot1);
-        dot2          = findViewById(R.id.dot2);
-        dot3          = findViewById(R.id.dot3);
+        tvElapsed       = findViewById(R.id.tvElapsed);
+        tvSleepyAgain   = findViewById(R.id.tvSleepyAgain);
+        tvLeaveBed      = findViewById(R.id.tvLeaveBed);
+        lottieIcon      = findViewById(R.id.lottieIcon);
+        dot1            = findViewById(R.id.dot1);
+        dot2            = findViewById(R.id.dot2);
+        dot3            = findViewById(R.id.dot3);
 
-
-        // Only 3 phases — hide dot4
-
-
-        // Start Lottie breathing icon
-        // Breathing animation: 5s inhale (forward) + 5s exhale (reverse)
         lottieIcon.setMinAndMaxFrame(0, 160);
         lottieIcon.setSpeed(0.267f);
         lottieIcon.setRepeatMode(LottieDrawable.RESTART);
         lottieIcon.setRepeatCount(LottieDrawable.INFINITE);
         lottieIcon.playAnimation();
 
-        // Flip inhale/exhale at animation midpoint (0.5 = direction change in cloud sweep)
-        final boolean[] inhaling = {true};
         final boolean[] crossedMid = {false};
         tvPhaseSubtitle.setText("Follow the clouds — Inhale");
         lottieIcon.addAnimatorUpdateListener(animation -> {
             float progress = lottieIcon.getProgress();
             if (progress >= 0.5f && !crossedMid[0]) {
                 crossedMid[0] = true;
-                inhaling[0] = false;
-                if (currentPhase == PHASE_BREATHING) {
+                if (currentPhase == PHASE_BREATHING)
                     tvPhaseSubtitle.setText("Follow the clouds — Exhale");
-                }
             } else if (progress < 0.1f && crossedMid[0]) {
                 crossedMid[0] = false;
-                inhaling[0] = true;
-                if (currentPhase == PHASE_BREATHING) {
+                if (currentPhase == PHASE_BREATHING)
                     tvPhaseSubtitle.setText("Follow the clouds — Inhale");
-                }
             }
         });
 
-        // "Fell asleep again" — return to lock screen
         tvSleepyAgain.setOnClickListener(v -> {
+            finishEpisode("fell_asleep");
             prefs.edit().remove("wakeEpisodeStart").apply();
             LockScreenActivity.wakeEpisodeActive = false;
             handler.removeCallbacks(ticker);
             finish();
         });
 
-        // "Leave bed" — end episode, return to lock screen
         tvLeaveBed.setOnClickListener(v -> {
+            finishEpisode("left_bed");
             prefs.edit().remove("wakeEpisodeStart").apply();
             LockScreenActivity.wakeEpisodeActive = false;
             handler.removeCallbacks(ticker);
@@ -134,7 +128,6 @@ public class WakeEpisodeActivity extends AppCompatActivity {
             finish();
         });
 
-        // Start ticking immediately
         handler.post(ticker);
     }
 
@@ -144,38 +137,59 @@ public class WakeEpisodeActivity extends AppCompatActivity {
         handler.removeCallbacks(ticker);
     }
 
+    private void recordEpisodeStart(long startMs) {
+        executor.execute(() -> {
+            SleepDatabase db = SleepDatabase.getInstance(this);
+            SleepSession active = db.sleepDao().getActiveSession();
+            if (active == null) return;
+            if (db.sleepDao().getActiveEpisode(active.id) != null) return;
+            WakeEpisodeRecord ep = new WakeEpisodeRecord();
+            ep.sessionId = active.id;
+            ep.startMs   = startMs;
+            ep.endMs     = 0;
+            ep.outcome   = "";
+            db.sleepDao().insertEpisode(ep);
+        });
+    }
+
+    private void finishEpisode(String outcome) {
+        long endMs = System.currentTimeMillis();
+        executor.execute(() -> {
+            SleepDatabase db = SleepDatabase.getInstance(this);
+            SleepSession active = db.sleepDao().getActiveSession();
+            if (active == null) return;
+            WakeEpisodeRecord ep = db.sleepDao().getActiveEpisode(active.id);
+            if (ep != null) {
+                ep.endMs   = endMs;
+                ep.outcome = outcome;
+                db.sleepDao().updateEpisode(ep);
+            }
+        });
+    }
+
     private void loadThresholds() {
         int breathingMins = prefs.getInt("breathingMins", 5);
         int restingMins   = prefs.getInt("restingMins",  10);
-
-        breathingEndSec = breathingMins * 60L;
-        restingEndSec   = breathingEndSec + (restingMins * 60L);
-        // After restingEndSec → PHASE_LEAVEBED immediately
+        breathingEndSec   = breathingMins * 60L;
+        restingEndSec     = breathingEndSec + (restingMins * 60L);
     }
 
     private void updateDisplay(long elapsedSeconds) {
-        // Update clock
-        long mins = elapsedSeconds / 60;
-        long secs = elapsedSeconds % 60;
+        long mins = elapsedSeconds / 60, secs = elapsedSeconds % 60;
         tvElapsed.setText(String.format(Locale.UK, "%d:%02d", mins, secs));
 
-        // Determine phase
         int phase;
         if      (elapsedSeconds < breathingEndSec) phase = PHASE_BREATHING;
         else if (elapsedSeconds < restingEndSec)   phase = PHASE_RESTING;
         else                                       phase = PHASE_LEAVEBED;
 
-        // Only trigger UI changes on phase transitions
         if (phase != currentPhase) {
             currentPhase = phase;
             onPhaseChanged(phase);
             updateDots(phase);
         }
 
-        // Show leave room button once we hit that phase
-        if (phase == PHASE_LEAVEBED) {
-            tvLeaveBed.setVisibility(View.VISIBLE);
-        }
+        if (phase == PHASE_LEAVEBED) tvLeaveBed.setVisibility(View.VISIBLE);
     }
 
     private void onPhaseChanged(int phase) {
@@ -203,17 +217,12 @@ public class WakeEpisodeActivity extends AppCompatActivity {
     }
 
     private void updateDots(int phase) {
-        // Reset all to inactive
         dot1.setBackgroundResource(R.drawable.dot_inactive);
         dot2.setBackgroundResource(R.drawable.dot_inactive);
         dot3.setBackgroundResource(R.drawable.dot_inactive);
-
-        // Fill dots up to and including current phase (fall-through intentional)
         switch (phase) {
             case PHASE_LEAVEBED:  dot3.setBackgroundResource(R.drawable.dot_active);
-            // fall through
             case PHASE_RESTING:   dot2.setBackgroundResource(R.drawable.dot_active);
-            // fall through
             case PHASE_BREATHING: dot1.setBackgroundResource(R.drawable.dot_active);
                 break;
         }

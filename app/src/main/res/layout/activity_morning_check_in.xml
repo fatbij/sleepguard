@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_night_gradient"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <!-- Status bar spacer -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
+
+        <!-- "Good morning" -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Good morning"
+            android:textSize="26sp"
+            android:textColor="#FFDDEEFF"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Date subtitle -->
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#55AACCEE"
+            android:layout_marginBottom="28dp" />
+
+        <!-- LAST NIGHT section header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LAST NIGHT"
+            android:textSize="11sp"
+            android:textColor="#66AACCEE"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Bedtime / Wake time / Wakings row -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bedtime"
+                    android:textSize="12sp"
+                    android:textColor="#55AACCEE" />
+                <TextView
+                    android:id="@+id/tvBedtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--:--"
+                    android:textSize="22sp"
+                    android:textColor="#FFFFFFFF"
+                    android:fontFamily="sans-serif-thin" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wake time"
+                    android:textSize="12sp"
+                    android:textColor="#55AACCEE" />
+                <TextView
+                    android:id="@+id/tvWakeTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--:--"
+                    android:textSize="22sp"
+                    android:textColor="#FFFFFFFF"
+                    android:fontFamily="sans-serif-thin" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wakings"
+                    android:textSize="12sp"
+                    android:textColor="#55AACCEE" />
+                <TextView
+                    android:id="@+id/tvWakings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="22sp"
+                    android:textColor="#FFFFFFFF"
+                    android:fontFamily="sans-serif-thin" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Spacer -->
+        <View android:layout_width="match_parent" android:layout_height="24dp" />
+
+        <!-- YOUR DIARY section header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="YOUR DIARY"
+            android:textSize="11sp"
+            android:textColor="#66AACCEE"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Sleep onset row -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time to fall asleep"
+                    android:textSize="15sp"
+                    android:textColor="#FFDDEEFF"
+                    android:fontFamily="sans-serif-light" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estimated minutes"
+                    android:textSize="12sp"
+                    android:textColor="#44AACCEE" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvOnsetMins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15 min"
+                android:textSize="18sp"
+                android:textColor="#FFFFFFFF"
+                android:fontFamily="sans-serif-thin"
+                android:background="@drawable/pill_button_outline"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:focusable="true"
+                android:clickable="true" />
+        </LinearLayout>
+
+        <!-- Sleep quality row -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sleep quality"
+                android:textSize="15sp"
+                android:textColor="#FFDDEEFF"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="2dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How well did you sleep overall?"
+                android:textSize="12sp"
+                android:textColor="#44AACCEE"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:id="@+id/qualityStarsRow"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/quality1" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/quality2" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/quality3" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/quality4" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/quality5" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Restedness row -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How rested do you feel?"
+                android:textSize="15sp"
+                android:textColor="#FFDDEEFF"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="2dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 = exhausted  ·  5 = fully refreshed"
+                android:textSize="12sp"
+                android:textColor="#44AACCEE"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:id="@+id/restedStarsRow"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/rested1" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/rested2" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/rested3" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/rested4" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/rested5" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Notes row -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notes (optional)"
+                android:textSize="15sp"
+                android:textColor="#FFDDEEFF"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textColor="#FFDDEEFF"
+                android:textColorHint="#33AACCEE"
+                android:textSize="14sp"
+                android:hint="Stress, alcohol, exercise, medication..."
+                android:minLines="2"
+                android:maxLines="4"
+                android:inputType="textMultiLine|textCapSentences"
+                android:gravity="top" />
+        </LinearLayout>
+
+        <!-- Save button -->
+        <TextView
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save diary entry"
+            android:textSize="16sp"
+            android:textColor="#FFFFFFFF"
+            android:gravity="center"
+            android:background="@drawable/pill_button"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:layout_marginBottom="12dp"
+            android:focusable="true"
+            android:clickable="true" />
+
+        <!-- Skip button -->
+        <TextView
+            android:id="@+id/btnSkip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Skip for now"
+            android:textSize="14sp"
+            android:textColor="#44AACCEE"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:focusable="true"
+            android:clickable="true" />
+
+    </LinearLayout>
+</ScrollView>

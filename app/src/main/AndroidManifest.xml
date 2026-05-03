@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:allowBackup="true"
@@ -36,11 +37,36 @@
 
         <activity
             android:name=".WakeEpisodeActivity"
+            android:theme="@style/Theme.LockScreen"
             android:exported="false"
             android:showWhenLocked="true"
             android:turnScreenOn="true"
             android:excludeFromRecents="true"
             android:launchMode="singleTask" />
+
+        <activity
+            android:name=".MorningCheckInActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SleepLogActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".EditSleepSessionActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".CheckInAlarmReceiver"
+            android:exported="false" />
 
         <service
             android:name=".TimerService"

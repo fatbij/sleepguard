@@ -211,7 +211,21 @@
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_marginBottom="32dp" />
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:id="@+id/btnDiary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sleep Diary"
+                android:textSize="14sp"
+                android:textColor="#55AACCEE"
+                android:letterSpacing="0.05"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginBottom="16dp" />
 
         </LinearLayout>
     </ScrollView>

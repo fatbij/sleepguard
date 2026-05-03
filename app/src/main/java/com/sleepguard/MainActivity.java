@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,21 +44,19 @@ public class MainActivity extends AppCompatActivity {
         tvWakeTime  = findViewById(R.id.tvWakeTime);
         updateTimeLabels();
 
-        tvSleepTime.setOnClickListener(v -> {
+        tvSleepTime.setOnClickListener(v ->
             new TimePickerDialog(this, (view, h, m) -> {
                 sleepHour = h; sleepMinute = m;
                 prefs.edit().putInt("sleepHour", h).putInt("sleepMinute", m).apply();
                 updateTimeLabels();
-            }, sleepHour, sleepMinute, true).show();
-        });
+            }, sleepHour, sleepMinute, true).show());
 
-        tvWakeTime.setOnClickListener(v -> {
+        tvWakeTime.setOnClickListener(v ->
             new TimePickerDialog(this, (view, h, m) -> {
                 wakeHour = h; wakeMinute = m;
                 prefs.edit().putInt("wakeHour", h).putInt("wakeMinute", m).apply();
                 updateTimeLabels();
-            }, wakeHour, wakeMinute, true).show();
-        });
+            }, wakeHour, wakeMinute, true).show());
 
         tvBreathingMins = findViewById(R.id.tvBreathingMins);
         tvRestingMins   = findViewById(R.id.tvRestingMins);
@@ -68,20 +67,12 @@ public class MainActivity extends AppCompatActivity {
         tvRestingMins.setOnClickListener(v ->
                 showNumberPicker("Resting minutes", "restingMins", 0, 60, tvRestingMins));
 
-        findViewById(R.id.btnActivate).setOnClickListener(v -> {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 1234);
-                Toast.makeText(this,
-                        "Please allow Display over other apps then tap Activate again",
-                        Toast.LENGTH_LONG).show();
-                return;
-            }
-            startTimerService();
-        });
+        findViewById(R.id.btnActivate).setOnClickListener(v -> checkBatteryOptAndStart());
 
-        findViewById(R.id.btnStop).setOnClickListener(v -> {
+        findViewById(R.id.btnDiary).setOnClickListener(v ->
+            startActivity(new Intent(this, SleepLogActivity.class)));
+
+        findViewById(R.id.btnStop).setOnClickListener(v ->
             new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to stop SleepGuard?")
                 .setPositiveButton("Yes, stop", (dialog, which) -> {
@@ -92,14 +83,31 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "SleepGuard stopped.", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("No, keep active", null)
-                .show();
-        });
+                .show());
+    }
+
+    private void checkBatteryOptAndStart() {
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 1234);
+            Toast.makeText(this,
+                    "Please allow Display over other apps then tap Activate again",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
+            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                    Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+        }
+
+        startTimerService();
     }
 
     private void showNumberPicker(String title, String prefKey, int min, int max, TextView label) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title);
-
         android.widget.NumberPicker picker = new android.widget.NumberPicker(this);
         picker.setMinValue(min);
         picker.setMaxValue(max);
@@ -110,20 +118,18 @@ public class MainActivity extends AppCompatActivity {
         layout.setGravity(android.view.Gravity.CENTER);
         layout.setPadding(0, 32, 0, 32);
         layout.addView(picker);
-        builder.setView(layout);
 
-        builder.setPositiveButton("Done", (dialog, which) -> {
-            int val = picker.getValue();
-            prefs.edit().putInt(prefKey, val).apply();
-            updatePlanLabels();
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+        new AlertDialog.Builder(this).setTitle(title).setView(layout)
+            .setPositiveButton("Done", (dialog, which) -> {
+                prefs.edit().putInt(prefKey, picker.getValue()).apply();
+                updatePlanLabels();
+            })
+            .setNegativeButton("Cancel", null).show();
     }
 
     private void updatePlanLabels() {
         tvBreathingMins.setText(prefs.getInt("breathingMins", 5)  + " mins");
-        tvRestingMins.setText(prefs.getInt("restingMins",    10) + " mins");
+        tvRestingMins.setText(  prefs.getInt("restingMins",   10) + " mins");
     }
 
     private void startTimerService() {
@@ -145,6 +151,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateTimeLabels() {
         tvSleepTime.setText(String.format(Locale.UK, "%02d:%02d", sleepHour, sleepMinute));
-        tvWakeTime.setText(String.format(Locale.UK,  "%02d:%02d", wakeHour,  wakeMinute));
+        tvWakeTime.setText( String.format(Locale.UK, "%02d:%02d", wakeHour,  wakeMinute));
     }
 }
