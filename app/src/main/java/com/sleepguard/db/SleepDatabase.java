@@ -5,7 +5,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {SleepSession.class, WakeEpisodeRecord.class}, version = 1)
+@Database(entities = {SleepSession.class, WakeEpisodeRecord.class}, version = 2)
 public abstract class SleepDatabase extends RoomDatabase {
 
     private static volatile SleepDatabase instance;

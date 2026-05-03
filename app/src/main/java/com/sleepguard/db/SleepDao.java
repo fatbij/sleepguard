@@ -1,6 +1,7 @@
 package com.sleepguard.db;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -44,4 +45,13 @@ public interface SleepDao {
 
     @Query("DELETE FROM wake_episodes WHERE session_id = :sessionId AND id = (SELECT id FROM wake_episodes WHERE session_id = :sessionId ORDER BY start_ms DESC LIMIT 1)")
     void deleteLatestEpisode(long sessionId);
+
+    @Delete
+    void deleteSession(SleepSession session);
+
+    @Query("DELETE FROM wake_episodes WHERE session_id = :sessionId")
+    void deleteEpisodesForSession(long sessionId);
+
+    @Query("SELECT COUNT(*) FROM wake_episodes")
+    int getTotalEpisodeCount();
 }

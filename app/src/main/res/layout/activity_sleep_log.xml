@@ -147,7 +147,7 @@
                 android:textColor="#66AACCEE"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Rating row (hidden if unrated) -->
+            <!-- Quality rating row (hidden if unrated) -->
             <LinearLayout
                 android:id="@+id/ratingRow"
                 android:orientation="horizontal"
@@ -160,15 +160,51 @@
                 <TextView android:id="@+id/star4" android:layout_width="22dp" android:layout_height="22dp" android:text="★" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
                 <TextView android:id="@+id/star5" android:layout_width="22dp" android:layout_height="22dp" android:text="★" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
             </LinearLayout>
+
+            <!-- Restedness row (hidden if unrated) -->
+            <LinearLayout
+                android:id="@+id/restedRow"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp">
+                <TextView android:id="@+id/rstar1" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
+                <TextView android:id="@+id/rstar2" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
+                <TextView android:id="@+id/rstar3" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
+                <TextView android:id="@+id/rstar4" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
+                <TextView android:id="@+id/rstar5" android:layout_width="22dp" android:layout_height="22dp" android:text="☆" android:textSize="16sp" android:textColor="#33FFFFFF" android:gravity="center" />
+            </LinearLayout>
+
+            <!-- Onset (hidden if 0) -->
+            <TextView
+                android:id="@+id/tvDetailOnset"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#66AACCEE"
+                android:layout_marginTop="6dp" />
+
+            <!-- Notes (hidden if empty) -->
+            <TextView
+                android:id="@+id/tvDetailNotes"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#88AACCEE"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginTop="6dp" />
         </LinearLayout>
 
-        <!-- Summary stats bar -->
+        <!-- Summary stats bar row 1 -->
         <LinearLayout
             android:orientation="horizontal"
             android:background="@drawable/bg_settings_panel"
             android:padding="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_width="match_parent"
@@ -187,6 +223,33 @@
             <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
                 <TextView android:id="@+id/tvStat3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="26sp" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-thin" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="nights" android:textSize="11sp" android:textColor="#55AACCEE" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Summary stats bar row 2 -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                <TextView android:id="@+id/tvStat4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textSize="26sp" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-thin" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="avg onset" android:textSize="11sp" android:textColor="#55AACCEE" />
+            </LinearLayout>
+
+            <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                <TextView android:id="@+id/tvStat5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textSize="26sp" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-thin" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="avg wakings" android:textSize="11sp" android:textColor="#55AACCEE" />
+            </LinearLayout>
+
+            <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                <TextView android:id="@+id/tvStat6" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textSize="26sp" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-thin" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="avg restedness" android:textSize="11sp" android:textColor="#55AACCEE" />
             </LinearLayout>
         </LinearLayout>
 

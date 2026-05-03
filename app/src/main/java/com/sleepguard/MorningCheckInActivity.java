@@ -30,10 +30,12 @@ public class MorningCheckInActivity extends AppCompatActivity {
     private int onsetMins  = 15;
     private int quality    = 0;
     private int restedness = 0;
+    private int mood       = 0;
 
     private TextView tvSubtitle, tvBedtime, tvWakeTime, tvWakings, tvOnsetMins;
     private final TextView[] qualityStars = new TextView[5];
     private final TextView[] restedStars  = new TextView[5];
+    private final TextView[] moodStars    = new TextView[5];
     private EditText etNotes;
 
     @Override
@@ -54,6 +56,7 @@ public class MorningCheckInActivity extends AppCompatActivity {
 
         int[] qIds = {R.id.quality1, R.id.quality2, R.id.quality3, R.id.quality4, R.id.quality5};
         int[] rIds = {R.id.rested1,  R.id.rested2,  R.id.rested3,  R.id.rested4,  R.id.rested5};
+        int[] mIds = {R.id.mood1,    R.id.mood2,    R.id.mood3,    R.id.mood4,    R.id.mood5};
         for (int i = 0; i < 5; i++) {
             final int val = i + 1;
             qualityStars[i] = findViewById(qIds[i]);
@@ -66,9 +69,15 @@ public class MorningCheckInActivity extends AppCompatActivity {
                 restedness = (restedness == val) ? 0 : val;
                 refreshStars(restedStars, restedness);
             });
+            moodStars[i] = findViewById(mIds[i]);
+            moodStars[i].setOnClickListener(v -> {
+                mood = (mood == val) ? 0 : val;
+                refreshStars(moodStars, mood);
+            });
         }
         refreshStars(qualityStars, 0);
         refreshStars(restedStars, 0);
+        refreshStars(moodStars, 0);
 
         tvOnsetMins.setOnClickListener(v -> showOnsetPicker());
         findViewById(R.id.btnSave).setOnClickListener(v -> submit());
@@ -95,6 +104,7 @@ public class MorningCheckInActivity extends AppCompatActivity {
         onsetMins  = s.onsetMins > 0 ? s.onsetMins : 15;
         quality    = s.rating;
         restedness = s.restedRating;
+        mood       = s.moodRating;
 
         try {
             Date d = new SimpleDateFormat("yyyy-MM-dd", Locale.UK).parse(s.date);
@@ -109,6 +119,7 @@ public class MorningCheckInActivity extends AppCompatActivity {
 
         refreshStars(qualityStars, quality);
         refreshStars(restedStars, restedness);
+        refreshStars(moodStars, mood);
 
         if (s.notes != null && !s.notes.isEmpty()) etNotes.setText(s.notes);
     }
@@ -136,6 +147,7 @@ public class MorningCheckInActivity extends AppCompatActivity {
         if (session == null) { finish(); return; }
         session.rating       = quality;
         session.restedRating = restedness;
+        session.moodRating   = mood;
         session.onsetMins    = onsetMins;
         session.notes        = etNotes.getText().toString().trim();
         executor.execute(() -> {

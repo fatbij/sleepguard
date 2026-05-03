@@ -30,4 +30,7 @@ public class SleepSession {
     public int onsetMins;                    // estimated mins to fall asleep
 
     public String notes;
+
+    @ColumnInfo(name = "mood_rating")
+    public int moodRating;                    // mood on waking 1-5, 0 = unrated
 }

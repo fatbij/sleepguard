@@ -1,206 +1,450 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_night_gradient">
+    android:background="@drawable/bg_night_gradient"
+    android:fillViewport="true">
 
-    <!-- Header row -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingTop="48dp"
-        android:paddingBottom="16dp"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:text="←"
-            android:textSize="20sp"
-            android:textColor="#FFAACCEE"
-            android:gravity="center"
-            android:focusable="true"
-            android:clickable="true" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:textColor="#FFDDEEFF"
-            android:gravity="center"
-            android:fontFamily="sans-serif-light" />
-
-        <TextView
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="Save"
-            android:textSize="14sp"
-            android:textColor="#FF7EB8FF"
-            android:gravity="center"
-            android:focusable="true"
-            android:clickable="true" />
-    </LinearLayout>
-
-    <!-- Edit rows card -->
     <LinearLayout
         android:orientation="vertical"
-        android:background="@drawable/bg_settings_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp">
+        android:padding="24dp">
 
-        <!-- Bed time row -->
-        <LinearLayout
-            android:id="@+id/rowBedtime"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:focusable="true"
-            android:clickable="true">
+        <!-- Status bar spacer -->
+        <View android:layout_width="match_parent" android:layout_height="32dp" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Bed time"
-                android:textSize="14sp"
-                android:textColor="#FFAACCEE" />
-
-            <TextView
-                android:id="@+id/tvBedtime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="#FFDDEEFF"
-                android:fontFamily="sans-serif-thin" />
-
-            <TextView
-                android:layout_width="24dp"
-                android:layout_height="wrap_content"
-                android:text="›"
-                android:textSize="20sp"
-                android:textColor="#44AACCEE"
-                android:gravity="center"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#11AACCEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
-
-        <!-- Wake time row -->
-        <LinearLayout
-            android:id="@+id/rowWakeTime"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:focusable="true"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Wake time"
-                android:textSize="14sp"
-                android:textColor="#FFAACCEE" />
-
-            <TextView
-                android:id="@+id/tvWakeTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="#FFDDEEFF"
-                android:fontFamily="sans-serif-thin" />
-
-            <TextView
-                android:layout_width="24dp"
-                android:layout_height="wrap_content"
-                android:text="›"
-                android:textSize="20sp"
-                android:textColor="#44AACCEE"
-                android:gravity="center"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#11AACCEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
-
-        <!-- Wakings counter row -->
+        <!-- Header row -->
         <LinearLayout
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Wakings"
-                android:textSize="14sp"
-                android:textColor="#FFAACCEE" />
-
-            <TextView
-                android:id="@+id/btnWakingsDown"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:text="−"
-                android:textSize="22sp"
-                android:textColor="#FF7EB8FF"
-                android:gravity="center"
-                android:focusable="true"
-                android:clickable="true" />
-
-            <TextView
-                android:id="@+id/tvWakings"
+                android:id="@+id/btnBack"
                 android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:text="0"
+                android:layout_height="40dp"
+                android:text="←"
                 android:textSize="20sp"
-                android:textColor="#FFDDEEFF"
+                android:textColor="#FFAACCEE"
                 android:gravity="center"
-                android:fontFamily="sans-serif-thin" />
+                android:focusable="true"
+                android:clickable="true" />
 
             <TextView
-                android:id="@+id/btnWakingsUp"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:text="+"
-                android:textSize="22sp"
+                android:id="@+id/tvTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textColor="#FFDDEEFF"
+                android:gravity="center"
+                android:fontFamily="sans-serif-light" />
+
+            <TextView
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Save"
+                android:textSize="14sp"
                 android:textColor="#FF7EB8FF"
                 android:gravity="center"
                 android:focusable="true"
                 android:clickable="true" />
         </LinearLayout>
+
+        <!-- SLEEP TIMES section header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SLEEP TIMES"
+            android:textSize="11sp"
+            android:textColor="#66AACCEE"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Times card -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/bg_settings_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Bed time row -->
+            <LinearLayout
+                android:id="@+id/rowBedtime"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:focusable="true"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bed time"
+                    android:textSize="14sp"
+                    android:textColor="#FFAACCEE" />
+
+                <TextView
+                    android:id="@+id/tvBedtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#FFDDEEFF"
+                    android:fontFamily="sans-serif-thin" />
+
+                <TextView
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textSize="20sp"
+                    android:textColor="#44AACCEE"
+                    android:gravity="center"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#11AACCEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+            <!-- Wake time row -->
+            <LinearLayout
+                android:id="@+id/rowWakeTime"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:focusable="true"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Wake time"
+                    android:textSize="14sp"
+                    android:textColor="#FFAACCEE" />
+
+                <TextView
+                    android:id="@+id/tvWakeTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#FFDDEEFF"
+                    android:fontFamily="sans-serif-thin" />
+
+                <TextView
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textSize="20sp"
+                    android:textColor="#44AACCEE"
+                    android:gravity="center"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#11AACCEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+            <!-- Wakings counter row -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Wakings"
+                    android:textSize="14sp"
+                    android:textColor="#FFAACCEE" />
+
+                <TextView
+                    android:id="@+id/btnWakingsDown"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:text="−"
+                    android:textSize="22sp"
+                    android:textColor="#FF7EB8FF"
+                    android:gravity="center"
+                    android:focusable="true"
+                    android:clickable="true" />
+
+                <TextView
+                    android:id="@+id/tvWakings"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:textColor="#FFDDEEFF"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif-thin" />
+
+                <TextView
+                    android:id="@+id/btnWakingsUp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:text="+"
+                    android:textSize="22sp"
+                    android:textColor="#FF7EB8FF"
+                    android:gravity="center"
+                    android:focusable="true"
+                    android:clickable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Hint -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Manual edits override app-tracked times."
+            android:textSize="11sp"
+            android:textColor="#33AACCEE"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:layout_marginBottom="28dp" />
+
+        <!-- YOUR DIARY section header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="YOUR DIARY"
+            android:textSize="11sp"
+            android:textColor="#66AACCEE"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Sleep onset row -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time to fall asleep"
+                    android:textSize="15sp"
+                    android:textColor="#FFDDEEFF"
+                    android:fontFamily="sans-serif-light" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estimated minutes"
+                    android:textSize="12sp"
+                    android:textColor="#44AACCEE" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvOnsetMins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15 min"
+                android:textSize="18sp"
+                android:textColor="#FFFFFFFF"
+                android:fontFamily="sans-serif-thin"
+                android:background="@drawable/pill_button_outline"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:focusable="true"
+                android:clickable="true" />
+        </LinearLayout>
+
+        <!-- Sleep quality row -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sleep quality"
+                android:textSize="15sp"
+                android:textColor="#FFDDEEFF"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="2dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How well did you sleep overall?"
+                android:textSize="12sp"
+                android:textColor="#44AACCEE"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/quality1" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/quality2" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/quality3" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/quality4" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/quality5" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Restedness row -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How rested do you feel?"
+                android:textSize="15sp"
+                android:textColor="#FFDDEEFF"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="2dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 = exhausted  ·  5 = fully refreshed"
+                android:textSize="12sp"
+                android:textColor="#44AACCEE"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/rested1" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/rested2" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/rested3" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/rested4" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/rested5" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Mood on waking row -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mood on waking"
+                android:textSize="15sp"
+                android:textColor="#FFDDEEFF"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="2dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 = very low  ·  5 = great"
+                android:textSize="12sp"
+                android:textColor="#44AACCEE"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/mood1" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/mood2" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/mood3" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/mood4" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+                <TextView android:id="@+id/mood5" android:layout_width="44dp" android:layout_height="44dp" android:text="★" android:textSize="28sp" android:textColor="#33FFFFFF" android:gravity="center" android:focusable="true" android:clickable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Notes row -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/bg_settings_panel"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notes (optional)"
+                android:textSize="15sp"
+                android:textColor="#FFDDEEFF"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textColor="#FFDDEEFF"
+                android:textColorHint="#33AACCEE"
+                android:textSize="14sp"
+                android:hint="Stress, alcohol, exercise, medication..."
+                android:minLines="2"
+                android:maxLines="4"
+                android:inputType="textMultiLine|textCapSentences"
+                android:gravity="top" />
+        </LinearLayout>
+
+        <!-- Re-do morning check-in -->
+        <TextView
+            android:id="@+id/btnRedoCheckin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Re-do morning check-in"
+            android:textSize="15sp"
+            android:textColor="#FFFFFFFF"
+            android:gravity="center"
+            android:background="@drawable/pill_button_outline"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:layout_marginBottom="12dp"
+            android:focusable="true"
+            android:clickable="true" />
+
+        <!-- Delete session -->
+        <TextView
+            android:id="@+id/btnDelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete this session"
+            android:textSize="14sp"
+            android:textColor="#FFFF6B6B"
+            android:gravity="center"
+            android:paddingTop="14dp"
+            android:paddingBottom="24dp"
+            android:focusable="true"
+            android:clickable="true" />
+
     </LinearLayout>
-
-    <!-- Hint text -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Manual edits override app-tracked times."
-        android:textSize="11sp"
-        android:textColor="#33AACCEE"
-        android:gravity="center"
-        android:paddingTop="16dp"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp" />
-
-</LinearLayout>
+</ScrollView>
