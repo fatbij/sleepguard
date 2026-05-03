@@ -89,6 +89,13 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     };
 
+    private final Runnable sleepTransitionTrigger = () -> {
+        if (!isTransitioning && isSleepWindow()) {
+            transitionPlayed = false;
+            showSleepMode();
+        }
+    };
+
     private final BroadcastReceiver timerReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context ctx, Intent i) {
             if (!isTransitioning && !wakeEpisodeActive) updateDisplay();
@@ -246,6 +253,7 @@ public class LockScreenActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(wakeTransitionTrigger);
+        handler.removeCallbacks(sleepTransitionTrigger);
         if (transitionFallback != null) handler.removeCallbacks(transitionFallback);
         try { unregisterReceiver(timerReceiver); } catch (Exception ignored) {}
     }
@@ -478,9 +486,23 @@ public class LockScreenActivity extends AppCompatActivity {
 
         lottieAnimation.setMinAndMaxProgress(0f, 1f);
         lottieAnimation.setProgress(FRAME_SUN_HOLD / TOTAL_FRAMES);
+
+        scheduleExactSleepTransition();
     }
 
-    // ── Wake boundary timer ────────────────────────────────────────────────
+    // ── Sleep/wake boundary timers ─────────────────────────────────────────
+
+    private void scheduleExactSleepTransition() {
+        handler.removeCallbacks(sleepTransitionTrigger);
+        Calendar sleep = Calendar.getInstance();
+        sleep.set(Calendar.HOUR_OF_DAY, sleepHour);
+        sleep.set(Calendar.MINUTE,      sleepMinute);
+        sleep.set(Calendar.SECOND,      0);
+        sleep.set(Calendar.MILLISECOND, 0);
+        long delay = sleep.getTimeInMillis() - System.currentTimeMillis();
+        if (delay <= 0) { sleep.add(Calendar.DAY_OF_MONTH, 1); delay = sleep.getTimeInMillis() - System.currentTimeMillis(); }
+        if (delay > 0 && delay < 24L * 3600 * 1000) handler.postDelayed(sleepTransitionTrigger, delay);
+    }
 
     private void scheduleExactWakeTransition() {
         handler.removeCallbacks(wakeTransitionTrigger);
