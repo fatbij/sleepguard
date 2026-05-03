@@ -2,6 +2,20 @@ plugins {
     id 'com.android.application'
 }
 
+// Load signing credentials from keystore.properties (not committed to git).
+// Create this file at the project root before building a release:
+//
+//   storeFile=../sleepguard-upload.jks
+//   storePassword=YOUR_STORE_PASSWORD
+//   keyAlias=sleepguard
+//   keyPassword=YOUR_KEY_PASSWORD
+//
+def keystorePropsFile = rootProject.file("keystore.properties")
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystoreProps.load(new FileInputStream(keystorePropsFile))
+}
+
 android {
     namespace 'com.sleepguard'
     compileSdk 34
@@ -20,9 +34,22 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            if (keystorePropsFile.exists()) {
+                storeFile     file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias      keystoreProps['keyAlias']
+                keyPassword   keystoreProps['keyPassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig    signingConfigs.release
+            minifyEnabled    true
+            shrinkResources  true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
