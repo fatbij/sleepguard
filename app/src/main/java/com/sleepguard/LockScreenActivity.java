@@ -9,10 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
@@ -111,23 +114,35 @@ public class LockScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (isSuppressed()) { finish(); return; }
 
-        getWindow().addFlags(
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON   |
-            WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        View decor = getWindow().getDecorView();
-        int flags =
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE          |
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN      |
-            View.SYSTEM_UI_FLAG_FULLSCREEN             |
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION        |
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        decor.setSystemUiVisibility(flags);
-        decor.setOnSystemUiVisibilityChangeListener(v -> {
-            if ((v & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                decor.setSystemUiVisibility(flags);
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true);
+            setTurnScreenOn(true);
+        } else {
+            getWindow().addFlags(
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsController wic = getWindow().getInsetsController();
+            if (wic != null) {
+                wic.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+                wic.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
+        } else {
+            View decor = getWindow().getDecorView();
+            int sysFlags =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE          |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN      |
+                View.SYSTEM_UI_FLAG_FULLSCREEN             |
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION        |
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            decor.setSystemUiVisibility(sysFlags);
+            decor.setOnSystemUiVisibilityChangeListener(v -> {
+                if ((v & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
+                    decor.setSystemUiVisibility(sysFlags);
+            });
+        }
 
         setContentView(R.layout.activity_lock_screen);
         prefs = getSharedPreferences("sleepguard", Context.MODE_PRIVATE);

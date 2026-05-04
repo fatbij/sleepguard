@@ -12,6 +12,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -62,7 +63,11 @@ public class TimerService extends Service {
         }
 
         createNotificationChannel();
-        startForeground(1, buildNotification());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, buildNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH);
+        } else {
+            startForeground(1, buildNotification());
+        }
 
         if (!running) {
             running = true;
@@ -109,7 +114,11 @@ public class TimerService extends Service {
                 scheduleDiaryReminder(s.id);
             }
         });
-        stopForeground(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            stopForeground(Service.STOP_FOREGROUND_REMOVE);
+        } else {
+            stopForeground(true);
+        }
         stopSelf();
     }
 
@@ -132,6 +141,7 @@ public class TimerService extends Service {
             public void run() {
                 sTickCount++;
                 Intent tick = new Intent(ACTION_TICK);
+                tick.setPackage(getPackageName());
                 sendBroadcast(tick);
 
                 // Only push the lock screen when the display is already on.
@@ -159,7 +169,9 @@ public class TimerService extends Service {
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_SINGLE_TOP |
                 Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(i);
+        try {
+            startActivity(i);
+        } catch (Exception ignored) {}
     }
 
     private void scheduleDiaryReminder(long sessionId) {
