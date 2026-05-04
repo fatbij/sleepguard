@@ -13,10 +13,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ServiceInfo;
+import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.provider.Settings;
+import android.view.View;
+import android.view.WindowManager;
 import androidx.core.app.NotificationCompat;
 import com.sleepguard.db.SleepDatabase;
 import com.sleepguard.db.SleepSession;
@@ -43,6 +47,9 @@ public class TimerService extends Service {
     private static long sTickCount = 0;
     public static long getTickCount() { return sTickCount; }
 
+    private WindowManager windowManager;
+    private View overlayTokenView;
+
     private BroadcastReceiver screenOnReceiver;
 
     @Override
@@ -51,6 +58,33 @@ public class TimerService extends Service {
         handler = new Handler(Looper.getMainLooper());
         keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         powerManager    = (PowerManager)    getSystemService(POWER_SERVICE);
+        addOverlayToken();
+    }
+
+    // Android 14 (API 34) blocks startActivity() from a background process unless the
+    // process has a registered window (isUidPresent check in ActivityStarter). Adding a
+    // 1×1 TYPE_APPLICATION_OVERLAY view gives the process a window entry in the WMS so
+    // the background-activity-launch exemption for SYSTEM_ALERT_WINDOW applies.
+    private void addOverlayToken() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(this)) {
+            windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+            overlayTokenView = new View(this);
+            WindowManager.LayoutParams p = new WindowManager.LayoutParams(
+                1, 1,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                PixelFormat.TRANSPARENT);
+            try { windowManager.addView(overlayTokenView, p); } catch (Exception ignored) {}
+        }
+    }
+
+    private void removeOverlayToken() {
+        if (overlayTokenView != null && windowManager != null) {
+            try { windowManager.removeViewImmediate(overlayTokenView); } catch (Exception ignored) {}
+            overlayTokenView = null;
+        }
     }
 
     @Override
@@ -234,6 +268,7 @@ public class TimerService extends Service {
     @Override
     public void onDestroy() {
         stopTicker();
+        removeOverlayToken();
         super.onDestroy();
     }
 }
