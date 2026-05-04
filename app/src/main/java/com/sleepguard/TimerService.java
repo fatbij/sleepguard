@@ -64,7 +64,7 @@ public class TimerService extends Service {
 
         createNotificationChannel();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(1, buildNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH);
+            startForeground(1, buildNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
         } else {
             startForeground(1, buildNotification());
         }
