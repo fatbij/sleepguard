@@ -5,16 +5,22 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int REQ_OVERLAY       = 1234;
+    private static final int REQ_NOTIFICATIONS = 2345;
 
     private SharedPreferences prefs;
     private int sleepHour = 22, sleepMinute = 30;
@@ -69,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         tvRestingMins.setOnClickListener(v ->
                 showNumberPicker("Resting minutes", "restingMins", 0, 60, tvRestingMins));
 
-        findViewById(R.id.btnActivate).setOnClickListener(v -> checkBatteryOptAndStart());
+        findViewById(R.id.btnActivate).setOnClickListener(v -> checkPermissionsAndStart());
 
         findViewById(R.id.btnDiary).setOnClickListener(v ->
             startActivity(new Intent(this, SleepLogActivity.class)));
@@ -86,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("No, keep active", null)
                 .show());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Fallback for when the OS killed the process while the user was in overlay settings.
+        // onActivityResult won't fire in that case, so we re-check here.
+        if (prefs.getBoolean("pendingActivate", false) && Settings.canDrawOverlays(this)) {
+            prefs.edit().remove("pendingActivate").apply();
+            checkPermissionsAndStart();
+        }
     }
 
     private void checkBatteryOptOnStartup() {
@@ -106,25 +123,55 @@ public class MainActivity extends AppCompatActivity {
             .show();
     }
 
-    private void checkBatteryOptAndStart() {
+    private void checkPermissionsAndStart() {
+        // Step 1: notification permission (Android 13+).
+        // The health foreground service type on Android 14 requires a visible notification,
+        // so POST_NOTIFICATIONS must be granted before the service can start.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        REQ_NOTIFICATIONS);
+                return;
+            }
+        }
+
+        // Step 2: overlay permission.
         if (!Settings.canDrawOverlays(this)) {
+            prefs.edit().putBoolean("pendingActivate", true).apply();
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, 1234);
+            startActivityForResult(intent, REQ_OVERLAY);
             Toast.makeText(this,
                     "Please allow Display over other apps then tap Activate again",
                     Toast.LENGTH_LONG).show();
             return;
         }
 
+        // Step 3: battery optimisation (best-effort — user can skip).
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
-            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-                    Uri.parse("package:" + getPackageName()));
-            startActivity(intent);
+            startActivity(new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                    Uri.parse("package:" + getPackageName())));
         }
 
+        prefs.edit().remove("pendingActivate").apply();
         startTimerService();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_NOTIFICATIONS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                checkPermissionsAndStart();
+            } else {
+                Toast.makeText(this,
+                        "Notification permission is required to show the sleep monitor.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void showNumberPicker(String title, String prefKey, int min, int max, TextView label) {
@@ -164,8 +211,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1234 && Settings.canDrawOverlays(this)) {
-            startTimerService();
+        if (requestCode == REQ_OVERLAY && Settings.canDrawOverlays(this)) {
+            prefs.edit().remove("pendingActivate").apply();
+            checkPermissionsAndStart();
         }
     }
 
